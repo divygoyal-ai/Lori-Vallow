@@ -1,5 +1,32 @@
 # Reference Style Guide: True-Crime Vertical Series
 
+## 0. Production rules (binding; they override anything below)
+
+1. **No minor's face is ever visible.** This applies to real footage, photos, stock and AI shots alike.
+   Minors appear only from behind, in silhouette, out of focus, or as objects (a toy, shoes, an empty
+   bed). Minors' faces in any real photo or clip are blurred.
+2. **Real footage is used only if it is copyright-free** (public domain or clearly licensed for reuse).
+   Anything else is replaced with stock footage or AI-generated content. News-station clips are not
+   used.
+3. **Real footage is preferred.** Use real or stock live-action footage wherever it fits, and AI only
+   to fill gaps. The finished video must look realistic, like filmed footage and not like AI.
+4. **The audio is the product.** The provided voiceover is the master clock. Every cut, caption and
+   SFX is timed to it, and visuals only support it.
+5. **AI shots never show or imitate a real person's face.** A real person appears in real footage, or
+   in AI shots only from behind or in silhouette, with no morphing or likeness generation.
+6. **Characters stay consistent across AI shots.** Each real person has a fixed physical description
+   (build, height, hair or baldness, age, typical clothing) in the character bible (section 8). Every
+   AI shot of them, including back views, must match it. A reference image per character is
+   generated once and reused for every shot.
+7. **Dark true-crime grade, slightly brighter than the references.** Target an average brightness of
+   about 0.28–0.32 (the references sit at 0.20–0.25). Shadows keep detail and faces or subjects stay
+   readable.
+8. **Suspense/mystery music bed that never competes with the VO.** Keep it about 18–22 dB below the
+   voice while speech plays, let it rise slightly in pauses, and duck it under key lines.
+9. **Built in HyperFrames.** The whole edit is authored as HyperFrames HTML code: timeline, cuts, grade,
+   captions, graphics, music, SFX and mix. It is rendered with the HyperFrames CLI to a 1080x1920 MP4.
+
+
 Analysis of the three reference episodes (Drive folder `1enDtRYuVCA7pJROopqtHa2rwEBhE3ubq`).
 Frames were sampled at 2 fps and inspected, with frame-by-frame passes (30 fps) on transitions and
 animations. Narration was transcribed with word timestamps. Audio was measured (EBU R128, spectrograms,
@@ -190,3 +217,13 @@ All labels use **Oswald** (condensed, wide tracking of about 0.15–0.25em, ALL 
   doorway). Chad stays faceless.
 - Close on the big man alone in the emptying room at blue hour, then black, a boom, and
   `EPISODE 2 · SELF-DEFENSE`.
+
+## 8. Character bible (to be filled and verified against real reference photos before generating)
+
+| Character | Fixed traits for AI back and silhouette shots |
+|---|---|
+| Charles Vallow | Large, heavyset "big bear" man, early 60s. Head and hair to be verified from photos. Casual polo/button-down. |
+| Lori Vallow | Slim woman, mid-40s, long light-blonde hair (verify). |
+| Tylee (minor in story) | Teen girl, long brown hair (verify). Back or silhouette only. |
+| JJ (minor) | Small 7-year-old boy (hair to be verified). Back, silhouette or objects only. |
+| Chad Daybell | A different build from Charles (verify). Always faceless and in shadow. |
