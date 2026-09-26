@@ -1,5 +1,20 @@
 # Reference Style Guide: True-Crime Vertical Series
 
+### Decisions confirmed with the producer
+
+- **Government-released public records may be used**, with a source tag. This covers court filings
+  such as the divorce petition, police bodycam and welfare-check footage, and booking photos.
+- **Real adults' faces may be shown, but only in genuine real material.** Never in AI-generated or
+  AI-edited shots.
+- **Music:** the producer supplies the background track. If none is provided, use royalty-free stock
+  or a generated suspense bed.
+- **Naming:** the series is **"Lori Vallow"**. Episode 1 is **"The Man Who Was Afraid"**.
+  - Title kicker: `LORI VALLOW · EPISODE 1`
+  - Title: `THE MAN WHO WAS AFRAID`, with AFRAID in red
+  - End card: `EPISODE 2`, `FOLLOW FOR WHAT HAPPENED NEXT`, `LORI VALLOW`
+- **Other languages:** a German version (if made) is a separate render built from its own VO file.
+  Captions are re-timed to that VO.
+
 ## 0. Production rules (binding; they override anything below)
 
 1. **No minor's face is ever visible.** This applies to real footage, photos, stock and AI shots alike.
@@ -205,7 +220,7 @@ All labels use **Oswald** (condensed, wide tracking of about 0.15–0.25em, ALL 
 
 ## 7. Applying this to Lori Vallow Ep1 ("The Man Who Was Afraid")
 
-- Title card: `LORI VALLOW · EPISODE 1` over "THE MAN WHO WAS **AFRAID**" (red last word).
+- Title card: `LORI VALLOW · EPISODE 1` over "THE MAN WHO WAS **AFRAID**" (red last word). End card series line: `LORI VALLOW`.
 - The quote *"a translated being who cannot taste death"* goes in the Playfair Italic quote style over
   the night-sky shot.
 - Charles's divorce petition uses the cream document card, with the threat line in red plus underline:
