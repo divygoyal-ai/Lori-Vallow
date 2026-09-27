@@ -14,3 +14,6 @@ ep1/renders/
 ep1/snapshots/
 ep1/.media/
 __pycache__/
+
+# rendered episodes (too large for git)
+/*.mp4
