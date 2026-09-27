@@ -35,7 +35,7 @@ def ff(*args):
 # higher so nothing reads muddy).
 # v2 grade, matched to the reference episodes (mean luma 0.20-0.25, true blacks at ~0.01-0.03,
 # highlights rolled off around 0.8, muted but not washed-out colour, cool shadows, heavy vignette).
-LOOK = ("eq=contrast=1.16:saturation=0.74,curves=all='0/0 0.07/0.012 0.5/0.46 0.85/0.79 1/0.88',"
+LOOK = ("eq=contrast=1.16:saturation=0.64,curves=all='0/0 0.07/0.012 0.5/0.46 0.85/0.79 1/0.88',"
         "colorbalance=rs=-0.04:gs=-0.01:bs=0.06:rh=0.03:bh=-0.03,vignette=angle=PI/3.9,noise=alls=4:allf=t+u")
 DOCLOOK = ("eq=contrast=1.1:saturation=0.3,curves=all='0/0 0.1/0.03 0.5/0.44 1/0.82',"
            "colorbalance=rh=0.04:gh=0.02:bh=-0.03,vignette=angle=PI/3.8")
@@ -122,13 +122,13 @@ REAL = {
     "real_charles_night_a.mp4": (B03, 39.0, 45.0, bodycam(500), "night"),
     "real_charles_night_b.mp4": (B03, 89.0, 93.0, bodycam(520), "night"),
     "real_charles_night_c.mp4": (B03, 631.5, 635.2, bodycam(520), "night"),
-    "real_charles_close.mp4": (B03, 478.5, 485.0, bodycam(800), "night"),  # big man, close, gesturing
+    "real_charles_close.mp4": (B03, 1019.8, 1023.9, bodycam(175), "night"),  # big man walking in with officers, lit garage
     "real_charles_to_door.mp4": (B03, 620.5, 625.0, bodycam(600), "night"),  # silhouette walking to the door
     "real_street_walkaway.mp4": (B03, 582.0, 590.0, bodycam(250), "night"),  # figures walking off down the street
     "real_gate_flashlight.mp4": (B03, 788.0, 792.0, bodycam(760), "night"),
     "real_bodycam_walk.mp4": (B03, 7.5, 12.5, bodycam(430), "night"),
     # Chandler PD bodycam, 2019 (640x360): suburban street, used as a 16:9 inset card
-    "real_chandler_street.mp4": (V("01_charles_shooting.mp4"), 4.0, 9.0, "crop=544:306:0:20,scale=1920:1080:flags=lanczos", "base"),
+    "real_chandler_street.mp4": (V("01_charles_shooting.mp4"), 9.2, 13.2, "crop=544:306:0:20,scale=1920:1080:flags=lanczos", "base"),
     # Chandler PD interview, 2019-07-11: tight 9:16 crops on Lori, and full 16:9 frames for inset cards
     "real_lori_int_a.mp4": (V("05_lori_interview.mp4"), 449.0, 454.0, bodycam(200, 300, 187, 533), "interview"),
     "real_lori_int_b.mp4": (V("05_lori_interview.mp4"), 1995.0, 2003.0, bodycam(200, 300, 187, 533), "interview"),
@@ -145,12 +145,12 @@ def video():
     # blurred full-frame backdrops for the 16:9 inset cards
     for n, (src, t0, t1) in {"real_lori_int_wide_bg.mp4": (V("05_lori_interview.mp4"), 799.0, 805.0),
                              "real_lori_int_wide_b_bg.mp4": (V("05_lori_interview.mp4"), 1194.5, 1200.0),
-                             "real_chandler_street_bg.mp4": (V("01_charles_shooting.mp4"), 4.0, 9.0)}.items():
+                             "real_chandler_street_bg.mp4": (V("01_charles_shooting.mp4"), 9.2, 13.2)}.items():
         clip(src, t0, t1, n, "scale=-2:1920,crop=1080:1920", "bgblur")
     still(DRAFT, 135.7, "charles_day_face.jpg")
     still(B03, 635.6, "charles_night_face.jpg", bodycam(520), "night")
     # detail insert from the toy corner of the boy shot (no child in frame)
-    still(DRAFT, 24.2, "ai_toys_detail.jpg", "crop=560:996:520:880,scale=1080:1920:flags=lanczos", "ai")
+    still(DRAFT, 24.2, "ai_toys_detail.jpg", "crop=480:853:600:1067,scale=1080:1920:flags=lanczos", "ai")
 
 
 def images():

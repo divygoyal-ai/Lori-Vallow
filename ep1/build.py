@@ -50,22 +50,23 @@ G = {
 # ------------------------------------------------------------------ the edit
 # kind: video | image | doc | inset | polaroid
 # for video: src, media start (ms), rate; kb = (scale_from, scale_to, x_from%, x_to%)
+FACE = "50% 22%"  # push-ins on Charles travel toward his head, not his hands
 SHOTS = [
     # --- cold open: meet Charles (real bodycam, then freeze; the push travels to his face)
     dict(id="s01v", kind="video", t=0.00, d=2.22, src="real_charles_day.mp4", ms=0.0, rate=0.45, g="base", kb=(1.0, 1.06, 0, 0), grp="s01", origin="50% 14%"),
     dict(id="s01i", kind="image", t=2.22, d=2.33, src="charles_day_face.jpg", g="base", kb=(1.06, 1.2, 0, 0), grp="s01", origin="50% 14%"),
     dict(id="s02", kind="image", t=4.55, d=3.60, src="chandler_aerial.jpg", g="base", kb=(1.18, 1.3, -6, 6)),
-    dict(id="s03", kind="image", t=8.15, d=2.80, src="gilbert.jpg", g="base", kb=(1.12, 1.2, 4, -4)),
+    dict(id="s03", kind="video", t=8.15, d=2.80, src="ai_house_back.mp4", ms=0.0, rate=0.93, g="day", kb=(1.0, 1.07, 0, 0), ai=True),
     dict(id="s04", kind="video", t=10.95, d=1.45, src="ai_laptop.mp4", ms=0.0, rate=0.69, g="ai", kb=(1.05, 1.1, 0, 0), ai=True),
-    dict(id="s05", kind="video", t=12.40, d=2.50, src="ai_house_back.mp4", ms=0.0, rate=1.04, g="day", kb=(1.0, 1.06, 0, 0), ai=True),
+    dict(id="s05", kind="inset", t=12.40, d=2.50, src="real_chandler_street.mp4", ms=0.2, rate=1.0, g="base",
+         tag=("BODYCAM", "CHANDLER POLICE · 2019")),
     # --- Lori (real) and the kids (never faces)
     dict(id="s06", kind="video", t=14.90, d=2.08, src="real_lori_car.mp4", ms=0.2, rate=1.0, g="base", kb=(1.0, 1.06, 0, 0), origin="55% 25%",
          tag=("BODYCAM", "ARIZONA POLICE · 2019")),
     dict(id="s07", kind="video", t=16.98, d=3.42, src="ai_garden_kids.mp4", ms=0.3, rate=1.0, g="ai", kb=(1.0, 1.06, 0, 0), ai=True),
     dict(id="s08", kind="video", t=20.40, d=4.70, src="ai_boy_floor.mp4", ms=0.0, rate=0.72, g="ai", kb=(1.0, 1.08, 0, 0), ai=True),
     dict(id="s09", kind="image", t=25.10, d=3.40, src="ai_toys_detail.jpg", g="ai", kb=(1.0, 1.1, 0, 0), ai=True),
-    dict(id="s10", kind="inset", t=28.50, d=3.45, src="real_chandler_street.mp4", ms=0.0, rate=1.0, g="base",
-         tag=("BODYCAM", "CHANDLER POLICE · 2019")),
+    dict(id="s10", kind="image", t=28.50, d=3.45, src="gilbert.jpg", g="base", kb=(1.12, 1.2, 4, -4)),
     # --- the turn: Charles is terrified (real bodycam, Jan 31 2019)
     dict(id="s11", kind="video", t=31.95, d=4.65, src="real_charles_night_a.mp4", ms=0.5, rate=1.0, g="night", kb=(1.0, 1.06, 0, 0), origin=FACE,
          tag=("BODYCAM", "CHANDLER POLICE · JAN 31, 2019")),
@@ -128,7 +129,7 @@ SHOTS = [
          tag=("BODYCAM", "CHANDLER POLICE · JAN 31, 2019")),
     dict(id="s35", kind="image", t=136.40, d=4.50, src="maricopa_court.jpg", g="base", kb=(1.1, 1.2, -5, 5),
          loc=("MARICOPA COUNTY SUPERIOR COURT", "PHOENIX, ARIZONA")),
-    dict(id="s36", kind="video", t=140.90, d=4.90, src="real_charles_close.mp4", ms=0.8, rate=1.0, g="night", kb=(1.0, 1.1, 0, 0), origin=FACE,
+    dict(id="s36", kind="video", t=140.90, d=4.90, src="real_charles_close.mp4", ms=0.0, rate=0.45, g="night", kb=(1.0, 1.1, 0, 0), origin=FACE,
          tag=("BODYCAM", "CHANDLER POLICE · JAN 31, 2019")),
     dict(id="s37", kind="video", t=145.80, d=4.60, src="real_street_walkaway.mp4", ms=1.0, rate=1.0, g="night", kb=(1.06, 1.0, 0, 0), veil=0.6),
 ]
