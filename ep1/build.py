@@ -93,7 +93,7 @@ SHOTS = [
     dict(id="s19", kind="inset", t=73.40, d=3.90, src="real_lori_int_wide.mp4", ms=0.5, rate=1.0, g="interview",
          tag=("POLICE INTERVIEW", "CHANDLER POLICE · 2019")),
     # --- "he is not Charles anymore"
-    dict(id="s20", kind="video", t=77.30, d=3.60, src="real_charles_night_c.mp4", ms=2.0, rate=1.0, g="night", kb=(1.0, 1.08, 0, 0),
+    dict(id="s20", kind="video", t=77.30, d=3.60, src="real_charles_night_c.mp4", ms=0.8, rate=1.0, g="night", kb=(1.0, 1.08, 0, 0),
          tag=("BODYCAM", "CHANDLER POLICE · JAN 31, 2019")),
     dict(id="s21", kind="video", t=80.90, d=3.30, src="ai_house_back_b.mp4", ms=0.0, rate=0.73, g="day", kb=(1.08, 1.0, 0, 0), ai=True,
          veil=0.5),
@@ -149,8 +149,11 @@ SFX_LUFS = {"impact-bass-1.mp3": -6.5, "impact-bass-2.mp3": -4.5, "whoosh-cinema
             "radio_squelch.wav": -9.8, "siren_distant.wav": -8.6, "sub_drop.wav": -15.2}
 
 
+MIX_LIFT = 2.0  # dB: VO is normalised to -14 LUFS; every SFX target rides up with it
+
+
 def vol(f, target_lufs):
-    return round(min(1.0, 10 ** ((target_lufs - SFX_LUFS[f]) / 20)), 3)
+    return round(min(1.0, 10 ** ((target_lufs + MIX_LIFT - SFX_LUFS[f]) / 20)), 3)
 
 
 def fx(aid, f, start, target):
@@ -200,9 +203,9 @@ SFX = [
 # music: producer's bed. Its first ~16s are ~15 dB quieter than the body, so the lane lifts the
 # intro, then holds ~18-20 dB under the VO, breathes up in the two long pauses and carries the ending.
 MUSIC_LANE = [
-    (0.0, 0.0), (0.6, 0.8), (14.0, 0.8), (17.5, 0.11),
-    (131.0, 0.11), (131.4, 0.17), (133.9, 0.17), (134.3, 0.11),
-    (148.4, 0.11), (149.2, 0.2), (CUT_TO_BLACK, 0.2), (CUT_TO_BLACK + 0.1, 0.13), (DUR - 0.3, 0.0),
+    (0.0, 0.0), (0.6, 1.0), (14.0, 1.0), (17.5, 0.139),
+    (131.0, 0.139), (131.4, 0.214), (133.9, 0.214), (134.3, 0.139),
+    (148.4, 0.139), (149.2, 0.252), (CUT_TO_BLACK, 0.252), (CUT_TO_BLACK + 0.1, 0.164), (DUR - 0.3, 0.0),
 ]
 
 

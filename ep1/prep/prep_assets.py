@@ -106,7 +106,7 @@ REAL = {
     "real_charles_day.mp4": (DRAFT, 135.0, 136.0, "scale=1080:1920:flags=lanczos", "base"),
     "real_charles_night_a.mp4": (V("03_charles_locked_out.mp4"), 39.0, 45.0, bodycam(500), "night"),
     "real_charles_night_b.mp4": (V("03_charles_locked_out.mp4"), 89.0, 93.0, bodycam(520), "night"),
-    "real_charles_night_c.mp4": (V("03_charles_locked_out.mp4"), 624.5, 632.0, bodycam(860), "night"),
+    "real_charles_night_c.mp4": (V("03_charles_locked_out.mp4"), 631.5, 637.0, bodycam(520), "night"),
     "real_bodycam_walk.mp4": (V("03_charles_locked_out.mp4"), 7.5, 12.5, bodycam(430), "night"),
     # Chandler PD interview, 2019-07-11: tight 9:16 crop on Lori, and full 16:9 frame for inset cards
     "real_lori_int_a.mp4": (V("05_lori_interview.mp4"), 1194.5, 1199.5, bodycam(200, 300, 187, 533), "interview"),
@@ -126,7 +126,7 @@ def video():
         clip(V("05_lori_interview.mp4"), t0, t1, n, "scale=-2:1920,crop=1080:1920", "bgblur")
     still(DRAFT, 135.7, "charles_day_face.jpg")
     still(DRAFT, 90.1, "ai_mirror_charles.jpg", g="ai")
-    still(V("03_charles_locked_out.mp4"), 628.4, "charles_night_face.jpg", bodycam(860), "night")
+    still(V("03_charles_locked_out.mp4"), 634.2, "charles_night_face.jpg", bodycam(520), "night")
 
 
 def images():
@@ -153,14 +153,14 @@ def audio():
     # references (-15 LUFS) once music and SFX sit under it.
     vo = os.path.join(SRC, "audio", "vo_main.mp3")
     out = subprocess.run(
-        ["ffmpeg", "-hide_banner", "-i", vo, "-af", "loudnorm=I=-16:TP=-1.5:LRA=7:print_format=json", "-f", "null", "-"],
+        ["ffmpeg", "-hide_banner", "-i", vo, "-af", "loudnorm=I=-14:TP=-1.2:LRA=7:print_format=json", "-f", "null", "-"],
         capture_output=True, text=True,
     ).stderr
     import json
 
     j = json.loads(out[out.rindex("{") : out.rindex("}") + 1])
     ln = (
-        f"loudnorm=I=-16:TP=-1.5:LRA=7:measured_I={j['input_i']}:measured_TP={j['input_tp']}:"
+        f"loudnorm=I=-14:TP=-1.2:LRA=7:measured_I={j['input_i']}:measured_TP={j['input_tp']}:"
         f"measured_LRA={j['input_lra']}:measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true"
     )
     ff("-i", vo, "-vn", "-af", ln, "-ar", "48000", "-ac", "2", os.path.join(A, "audio", "vo.wav"))
