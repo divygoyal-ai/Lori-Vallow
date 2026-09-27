@@ -104,8 +104,8 @@ AI = {
 REAL = {
     "real_lori_car.mp4": (DRAFT, 41.9, 48.5, "scale=1080:1920:flags=lanczos", "base"),
     "real_charles_day.mp4": (DRAFT, 135.0, 136.0, "scale=1080:1920:flags=lanczos", "base"),
-    "real_charles_night_a.mp4": (V("03_charles_locked_out.mp4"), 39.0, 45.0, bodycam(700), "night"),
-    "real_charles_night_b.mp4": (V("03_charles_locked_out.mp4"), 89.0, 93.0, bodycam(720), "night"),
+    "real_charles_night_a.mp4": (V("03_charles_locked_out.mp4"), 39.0, 45.0, bodycam(500), "night"),
+    "real_charles_night_b.mp4": (V("03_charles_locked_out.mp4"), 89.0, 93.0, bodycam(520), "night"),
     "real_charles_night_c.mp4": (V("03_charles_locked_out.mp4"), 624.5, 632.0, bodycam(860), "night"),
     "real_bodycam_walk.mp4": (V("03_charles_locked_out.mp4"), 7.5, 12.5, bodycam(430), "night"),
     # Chandler PD interview, 2019-07-11: tight 9:16 crop on Lori, and full 16:9 frame for inset cards

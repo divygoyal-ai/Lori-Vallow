@@ -14,6 +14,7 @@ Rules this edit follows (see docs/STYLE_GUIDE.md section 0):
   - no captions (added later)
 """
 import json
+import os
 
 W, H = 1080, 1920
 DUR = 155.0
@@ -79,23 +80,16 @@ SHOTS = [
          cam=[(0.0, 722, 935, 0.7), (1.2, 952, 685, 1.6), (3.0, 952, 685, 1.6), (3.7, 500, 410, 1.6),
               (7.4, 500, 410, 1.6), (8.2, 900, 410, 1.6)],
          hl=[(1.45, 868, 664, 176, 42), (4.85, 262, 392, 490, 40), (8.95, 958, 390, 214, 42)]),
-         cam=[(0.0, 722, 935, 0.62), (1.2, 1000, 700, 1.55), (3.0, 1000, 700, 1.55), (3.7, 560, 430, 1.55),
-              (7.4, 560, 430, 1.55), (8.2, 980, 440, 1.55)],
-         hl=[(1.45, 905, 662, 200, 44), (4.85, 268, 385, 525, 48), (8.95, 960, 385, 240, 48)]),
     dict(id="s16", kind="video", t=60.10, d=4.80, src="ai_planet.mp4", ms=0.0, rate=0.56, g="ai", kb=(1.0, 1.1, 0, 0), ai=True),
     dict(id="s17", kind="video", t=64.90, d=2.90, src="ai_calendar.mp4", ms=0.2, rate=1.0, g="day", kb=(1.0, 1.08, 0, 0), ai=True),
     dict(id="s18a", kind="doc", t=67.80, d=2.50, src="doc_p03.jpg", g="doc",
          tag=("COURT FILING", "MARICOPA COUNTY · FEB 2019"),
          cam=[(0.0, 560, 890, 1.45), (2.5, 570, 890, 1.52)],
          hl=[(0.9, 270, 901, 250, 40)]),
-         cam=[(0.0, 700, 880, 1.45), (2.5, 690, 880, 1.52)],
-         hl=[(0.9, 272, 894, 300, 48)]),
     dict(id="s18b", kind="doc", t=70.30, d=3.10, src="doc_p04.jpg", g="doc",
          tag=("COURT FILING", "MARICOPA COUNTY · FEB 2019"),
          cam=[(0.0, 600, 1070, 1.3), (3.1, 610, 1070, 1.38)],
          hl=[(0.75, 312, 1052, 572, 42)]),
-         cam=[(0.0, 700, 1060, 1.45), (3.1, 690, 1060, 1.52)],
-         hl=[(0.9, 268, 1047, 590, 48)]),
     dict(id="s19", kind="inset", t=73.40, d=3.90, src="real_lori_int_wide.mp4", ms=0.5, rate=1.0, g="interview",
          tag=("POLICE INTERVIEW", "CHANDLER POLICE · 2019")),
     # --- "he is not Charles anymore"
@@ -109,30 +103,25 @@ SHOTS = [
          tag=("COURT FILING", "MARICOPA COUNTY · FEB 2019"),
          cam=[(0.0, 770, 900, 1.0), (4.55, 770, 905, 1.08)],
          hl=[(2.0, 1201, 829, 76, 40), (2.15, 264, 889, 134, 40), (2.75, 851, 940, 424, 40), (2.95, 266, 999, 98, 40)]),
-         cam=[(0.0, 800, 880, 1.3), (4.55, 780, 900, 1.42)],
-         hl=[(2.0, 1108, 827, 170, 48), (2.2, 268, 882, 160, 48), (2.75, 800, 937, 475, 48)]),
     # --- the writer from out of state (Chad - never seen)
     dict(id="s25", kind="video", t=94.90, d=9.70, src="ai_writer_desk.mp4", ms=0.0, rate=0.74, g="ai", kb=(1.0, 1.12, 0, 0), ai=True),
     dict(id="s26", kind="video", t=104.60, d=3.00, src="real_lori_int_b.mp4", ms=0.0, rate=1.0, g="interview", kb=(1.05, 1.14, 0, 0),
          tag=("POLICE INTERVIEW", "CHANDLER POLICE · 2019")),
     # --- Charles acts
     dict(id="s27", kind="video", t=107.60, d=4.70, src="ai_watching.mp4", ms=0.0, rate=0.83, g="ai", kb=(1.0, 1.07, 0, 0), ai=True),
-    dict(id="s28", kind="video", t=112.30, d=4.40, src="real_bodycam_walk.mp4", ms=0.4, rate=1.0, g="night", kb=(1.0, 1.05, 0, 0),
+    dict(id="s28", kind="video", t=112.30, d=4.40, src="real_bodycam_walk.mp4", ms=0.0, rate=0.5, g="night", kb=(1.0, 1.05, 0, 0),
          tag=("BODYCAM", "CHANDLER POLICE · JAN 31, 2019")),
     dict(id="s29", kind="video", t=116.70, d=2.80, src="ai_family_court.mp4", ms=0.0, rate=1.0, g="ai", kb=(1.0, 1.06, 0, 0), ai=True),
     dict(id="s30", kind="doc", t=119.50, d=3.10, src="doc_p01.jpg", g="doc",
          tag=("COURT FILING", "MARICOPA COUNTY SUPERIOR COURT"),
          cam=[(0.0, 560, 820, 1.2), (3.1, 580, 830, 1.3)],
          hl=[(0.8, 266, 722, 272, 36), (1.8, 266, 887, 244, 36)]),
-         cam=[(0.0, 560, 700, 1.15), (3.1, 600, 760, 1.32)], hl=[]),
     dict(id="s31", kind="video", t=122.60, d=3.70, src="ai_writing.mp4", ms=0.3, rate=1.0, g="ai", kb=(1.0, 1.08, 0, 0), ai=True),
     # --- the threat, in the court record
     dict(id="s32", kind="doc", t=126.30, d=5.70, src="doc_p04.jpg", g="doc",
          tag=("COURT FILING", "MARICOPA COUNTY · FEB 2019"),
          cam=[(0.0, 780, 990, 1.05), (5.7, 775, 995, 1.09)],
          hl=[(0.3, 800, 993, 478, 40), (2.2, 756, 940, 520, 40), (2.45, 266, 999, 98, 40)]),
-         cam=[(0.0, 820, 1000, 1.55), (5.7, 800, 1000, 1.66)],
-         hl=[(0.3, 700, 992, 575, 48), (0.55, 268, 1047, 250, 48), (2.2, 800, 937, 475, 48), (2.4, 268, 992, 170, 48)]),
     dict(id="s33", kind="image", t=132.00, d=2.20, src="charles_night_face.jpg", g="night", kb=(1.05, 1.12, 0, 0), veil=0.35),
     dict(id="s34", kind="video", t=134.20, d=2.20, src="real_charles_night_b.mp4", ms=0.0, rate=1.0, g="night", kb=(1.0, 1.05, 0, 0),
          tag=("BODYCAM", "CHANDLER POLICE · JAN 31, 2019")),
@@ -145,6 +134,7 @@ SHOTS = [
 ]
 
 CUT_TO_BLACK = 150.40
+DOC_K = 1.7  # papers are laid out at 1.7x and only ever scaled down (upscaled layers tile badly in capture)
 
 # ------------------------------------------------------------------ audio
 # (id, file, start, volume, media_start)
@@ -152,49 +142,65 @@ def hit(peak_time, peak_offset):  # start so the file's peak lands on peak_time
     return round(peak_time - peak_offset, 3)
 
 
+# Loudness calibration. Integrated LUFS of each file (measured with ebur128) and the loudness each
+# class of effect should sit at in the mix. The VO is -16 LUFS: impacts are felt, never on top of words.
+SFX_LUFS = {"impact-bass-1.mp3": -6.5, "impact-bass-2.mp3": -4.5, "whoosh-cinematic.mp3": -14.1, "whoosh-short.mp3": -15.2,
+            "glitch-3.mp3": -22.3, "heartbeat.wav": -17.9, "marker.wav": -10.0, "paper.wav": -14.8, "pen_writing.wav": -13.5,
+            "radio_squelch.wav": -9.8, "siren_distant.wav": -8.6, "sub_drop.wav": -15.2}
+
+
+def vol(f, target_lufs):
+    return round(min(1.0, 10 ** ((target_lufs - SFX_LUFS[f]) / 20)), 3)
+
+
+def fx(aid, f, start, target):
+    return (aid, f, start, vol(f, target), 0)
+
+
+HIT, SOFT_HIT, KEY_HIT = -21, -24, -18.5
 SFX = [
-    ("x_title", "impact-bass-1.mp3", hit(0.35, 0.10), 0.55, 0),
-    ("x_wh1", "whoosh-short.mp3", hit(4.55, 0.16), 0.35, 0),
-    ("x_turn", "impact-bass-2.mp3", hit(31.95, 1.83), 0.65, 0),
-    ("x_lori", "impact-bass-1.mp3", hit(44.70, 0.10), 0.45, 0),
-    ("x_paper1", "paper.wav", 48.85, 0.35, 0),
-    ("x_mk1", "marker.wav", 48.90 + 1.45, 0.3, 0),
-    ("x_mk2", "marker.wav", 48.90 + 4.85, 0.3, 0),
-    ("x_mk3", "marker.wav", 48.90 + 8.95, 0.3, 0),
-    ("x_end", "whoosh-cinematic.mp3", hit(60.10, 2.91), 0.5, 0),
-    ("x_wh2", "whoosh-short.mp3", hit(64.90, 0.16), 0.3, 0),
-    ("x_paper2", "paper.wav", 67.75, 0.3, 0),
-    ("x_mk4", "marker.wav", 67.80 + 0.9, 0.3, 0),
-    ("x_mk5", "marker.wav", 70.30 + 0.9, 0.3, 0),
-    ("x_swell", "whoosh-cinematic.mp3", hit(77.30, 2.91), 0.4, 0),
-    ("x_notch", "impact-bass-1.mp3", hit(77.30, 0.10), 0.5, 0),
-    ("x_glitch", "glitch-3.mp3", 84.25, 0.18, 0),
-    ("x_hb1", "heartbeat.wav", 85.10, 0.55, 0),
-    ("x_hb2", "heartbeat.wav", 86.30, 0.5, 0),
-    ("x_face", "impact-bass-2.mp3", hit(89.06, 1.83), 0.35, 0),
-    ("x_paper3", "paper.wav", 90.30, 0.3, 0),
-    ("x_mk6", "marker.wav", 90.35 + 2.0, 0.3, 0),
-    ("x_mk7", "marker.wav", 90.35 + 2.75, 0.28, 0),
-    ("x_wh3", "whoosh-short.mp3", hit(94.90, 0.16), 0.28, 0),
-    ("x_radio", "radio_squelch.wav", 112.35, 0.3, 0),
-    ("x_siren", "siren_distant.wav", 111.95, 0.16, 0),
-    ("x_divorce", "impact-bass-1.mp3", hit(116.72, 0.10), 0.35, 0),
-    ("x_paper4", "paper.wav", 119.45, 0.3, 0),
-    ("x_pen", "pen_writing.wav", 122.70, 0.32, 0),
-    ("x_kill", "impact-bass-2.mp3", hit(126.34, 1.83), 0.75, 0),
-    ("x_mk8", "marker.wav", 126.30 + 0.3, 0.3, 0),
-    ("x_mk9", "marker.wav", 126.30 + 2.2, 0.28, 0),
-    ("x_hb3", "heartbeat.wav", 132.15, 0.55, 0),
-    ("x_hb4", "heartbeat.wav", 133.35, 0.45, 0),
-    ("x_wh4", "whoosh-short.mp3", hit(136.40, 0.16), 0.28, 0),
-    ("x_black", "impact-bass-2.mp3", hit(CUT_TO_BLACK, 1.83), 0.8, 0),
-    ("x_sub", "sub_drop.wav", CUT_TO_BLACK, 0.5, 0),
+    fx("x_title", "impact-bass-1.mp3", hit(0.35, 0.10), HIT),
+    fx("x_wh1", "whoosh-short.mp3", hit(4.55, 0.16), -25),
+    fx("x_turn", "impact-bass-2.mp3", hit(31.95, 1.83), KEY_HIT),
+    fx("x_lori", "impact-bass-1.mp3", hit(44.70, 0.10), SOFT_HIT),
+    fx("x_paper1", "paper.wav", 48.85, -26),
+    fx("x_mk1", "marker.wav", 48.90 + 1.45, -27),
+    fx("x_mk2", "marker.wav", 48.90 + 4.85, -27),
+    fx("x_mk3", "marker.wav", 48.90 + 8.95, -27),
+    fx("x_end", "whoosh-cinematic.mp3", hit(60.10, 2.91), -23),
+    fx("x_wh2", "whoosh-short.mp3", hit(64.90, 0.16), -26),
+    fx("x_paper2", "paper.wav", 67.75, -27),
+    fx("x_mk4", "marker.wav", 67.80 + 0.9, -27),
+    fx("x_mk5", "marker.wav", 70.30 + 0.75, -27),
+    fx("x_swell", "whoosh-cinematic.mp3", hit(77.30, 2.91), -24),
+    fx("x_notch", "impact-bass-1.mp3", hit(77.30, 0.10), HIT),
+    fx("x_glitch", "glitch-3.mp3", 84.25, -28),
+    fx("x_hb1", "heartbeat.wav", 85.10, -24),
+    fx("x_hb2", "heartbeat.wav", 86.30, -25),
+    fx("x_face", "impact-bass-2.mp3", hit(89.06, 1.83), SOFT_HIT),
+    fx("x_paper3", "paper.wav", 90.30, -27),
+    fx("x_mk6", "marker.wav", 90.35 + 2.0, -27),
+    fx("x_mk7", "marker.wav", 90.35 + 2.75, -27),
+    fx("x_wh3", "whoosh-short.mp3", hit(94.90, 0.16), -26),
+    fx("x_siren", "siren_distant.wav", 111.95, -31),
+    fx("x_radio", "radio_squelch.wav", 112.35, -26),
+    fx("x_divorce", "impact-bass-1.mp3", hit(116.72, 0.10), SOFT_HIT),
+    fx("x_paper4", "paper.wav", 119.45, -27),
+    fx("x_pen", "pen_writing.wav", 122.70, -28),
+    fx("x_kill", "impact-bass-2.mp3", hit(126.34, 1.83), KEY_HIT),
+    fx("x_mk8", "marker.wav", 126.30 + 0.3, -27),
+    fx("x_mk9", "marker.wav", 126.30 + 2.2, -27),
+    fx("x_hb3", "heartbeat.wav", 132.15, -23),
+    fx("x_hb4", "heartbeat.wav", 133.35, -24),
+    fx("x_wh4", "whoosh-short.mp3", hit(136.40, 0.16), -26),
+    fx("x_black", "impact-bass-2.mp3", hit(CUT_TO_BLACK, 1.83), -17),
+    fx("x_sub", "sub_drop.wav", CUT_TO_BLACK, -21),
 ]
 
 # music: producer's bed. Its first ~16s are ~15 dB quieter than the body, so the lane lifts the
 # intro, then holds ~18-20 dB under the VO, breathes up in the two long pauses and carries the ending.
 MUSIC_LANE = [
-    (0.0, 0.0), (0.6, 0.42), (14.0, 0.42), (17.5, 0.11),
+    (0.0, 0.0), (0.6, 0.8), (14.0, 0.8), (17.5, 0.11),
     (131.0, 0.11), (131.4, 0.17), (133.9, 0.17), (134.3, 0.11),
     (148.4, 0.11), (149.2, 0.2), (CUT_TO_BLACK, 0.2), (CUT_TO_BLACK + 0.1, 0.13), (DUR - 0.3, 0.0),
 ]
@@ -269,8 +275,13 @@ def build():
             js.append(f'tl.fromTo("#{sid}-card", {{scale:1.16, rotation:-4, opacity:0}}, {{scale:1, rotation:-2, opacity:1, duration:0.28, ease:"power3.out"}}, {t:.2f});')
             js.append(f'tl.to("#{sid}-card", {{scale:1.05, duration:{d - 0.3:.2f}, ease:"none"}}, {t + 0.3:.2f});')
         elif k == "doc":
+            uniq = f"{sid}_{s['src']}"
+            if not os.path.exists(f"assets/img/{uniq}"):
+                os.link(f"assets/img/{s['src']}", f"assets/img/{uniq}")
+            s = dict(s, src=uniq)
+            K = DOC_K
             hls = "".join(
-                f'<div id="{sid}-h{i}" class="hl" style="left:{x}px;top:{y}px;width:{w}px;height:{h}px"><div class="hl-u"></div></div>'
+                f'<div id="{sid}-h{i}" class="hl" style="left:{x * K:.0f}px;top:{y * K:.0f}px;width:{w * K:.0f}px;height:{h * K:.0f}px"><div class="hl-u"></div></div>'
                 for i, (_, x, y, w, h) in enumerate(s["hl"]))
             body.append(f'<div id="{sid}" class="clip scene docbg" data-start="{t:.2f}" data-duration="{d:.2f}" data-track-index="{track}">'
                         f'<div id="{sid}-cam" class="doccam"><div class="paper">'
@@ -278,7 +289,7 @@ def build():
             cam = s["cam"]
 
             def pos(cx, cy, sc):
-                return f"x:{W / 2 - cx * sc:.1f}, y:{H / 2 - cy * sc:.1f}, scale:{sc}"
+                return f"x:{W / 2 - cx * sc:.1f}, y:{H / 2 - cy * sc:.1f}, scale:{sc / DOC_K:.4f}"
 
             js.append(f'tl.set("#{sid}-cam", {{{pos(*cam[0][1:])}}}, {t:.2f});')
             for (a, *pa), (b, *pb) in zip(cam, cam[1:]):
@@ -412,7 +423,7 @@ html, body {{ width: {W}px; height: {H}px; overflow: hidden; background: var(--i
 /* name super */
 .name-wrap {{ position: absolute; left: 0; right: 0; top: 1290px; display: flex; flex-direction: column; align-items: center; gap: 10px; }}
 .name-main {{ font-family: "Anton", sans-serif; color: var(--white); font-size: 92px; text-shadow: 0 6px 26px rgba(0,0,0,0.8); }}
-.name-sub {{ color: var(--red); font-weight: 600; font-size: 30px; letter-spacing: 0.24em; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }}
+.name-sub {{ color: var(--white); background: var(--red); font-weight: 600; font-size: 28px; letter-spacing: 0.22em; padding: 4px 14px 4px 18px; }}
 /* location card, top-center */
 .loc {{ position: absolute; left: 0; right: 0; top: 190px; display: flex; flex-direction: column; align-items: center; gap: 12px; }}
 .loc-kick {{ color: var(--grey); font-weight: 500; font-size: 24px; letter-spacing: 0.26em; display: flex; align-items: center; gap: 12px;
@@ -428,11 +439,11 @@ html, body {{ width: {W}px; height: {H}px; overflow: hidden; background: var(--i
   letter-spacing: 0.3em; }}
 /* documents */
 .docbg {{ background: radial-gradient(ellipse at 50% 45%, #2a2622 0%, #121110 60%, #070707 100%); }}
-.doccam {{ position: absolute; left: 0; top: 0; width: 1445px; height: 1870px; transform-origin: 0 0; }}
-.paper {{ position: absolute; left: 0; top: 0; width: 1445px; height: 1870px; box-shadow: 0 40px 120px rgba(0,0,0,0.85); }}
-.paper img {{ display: block; width: 1445px; height: 1870px; }}
+.doccam {{ position: absolute; left: 0; top: 0; width: {1445 * DOC_K:.0f}px; height: {1870 * DOC_K:.0f}px; transform-origin: 0 0; }}
+.paper {{ position: absolute; left: 0; top: 0; width: {1445 * DOC_K:.0f}px; height: {1870 * DOC_K:.0f}px; box-shadow: 0 40px 120px rgba(0,0,0,0.85); }}
+.paper img {{ display: block; width: {1445 * DOC_K:.0f}px; height: {1870 * DOC_K:.0f}px; }}
 .hl {{ position: absolute; transform-origin: 0 50%; background: rgba(208,32,42,0.2); mix-blend-mode: multiply; }}
-.hl-u {{ position: absolute; left: 0; right: 0; bottom: -4px; height: 7px; background: var(--red); }}
+.hl-u {{ position: absolute; left: 0; right: 0; bottom: -6px; height: 11px; background: var(--red); }}
 /* end card */
 .endbg {{ background: #060607; }}
 .end-wrap {{ position: absolute; left: 0; right: 0; top: 760px; display: flex; flex-direction: column; align-items: center; gap: 22px; }}
