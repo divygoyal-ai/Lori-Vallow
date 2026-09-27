@@ -62,7 +62,20 @@ def solve_gamma(args, pre, g):
     return (lo * hi) ** 0.5
 
 
+def _levels(args, pre):
+    # per-clip auto-levels: the source's darkest / brightest 1% become true black / near-white, so murky
+    # bodycam and hazy AI footage get the same contrast as the references before the look is applied
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", *args, "-vf", pre + ",scale=108:192,format=gray", "-f", "rawvideo", "-"],
+                         capture_output=True).stdout
+    y = np.frombuffer(raw, np.uint8) / 255
+    lo, hi = np.percentile(y, 1.0), np.percentile(y, 99.3)
+    lo, hi = min(lo, 0.25), max(hi, lo + 0.25)
+    return f"colorlevels=rimin={lo:.3f}:gimin={lo:.3f}:bimin={lo:.3f}:rimax={hi:.3f}:gimax={hi:.3f}:bimax={hi:.3f}"
+
+
 def graded(args, pre, g):
+    if g not in ("doc", "bgblur"):
+        pre = f"{pre},{_levels(args, pre)}"
     return f"{pre},eq=gamma={solve_gamma(args, pre, g):.3f},{look(g)}"
 
 
@@ -72,7 +85,7 @@ ENC = ["-an", "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-pix_fmt", "y
 def clip(src, t0, t1, out, vf="scale=1080:1920:flags=lanczos", g="ai"):
     if os.path.exists(os.path.join(A, "video", out)):
         return
-    vf = graded(["-ss", f"{t0}", "-to", f"{t1}", "-i", src, "-r", "1"], vf, g)
+    vf = graded(["-ss", f"{t0}", "-to", f"{t1}", "-i", src, "-r", "0.7"], vf, g)
     ff("-ss", f"{t0}", "-to", f"{t1}", "-i", src, "-vf", vf, *ENC, os.path.join(A, "video", out))
 
 
