@@ -5,3 +5,12 @@ dist
 
 # Ignore the output video from Git but not videos you import into src/.
 out
+
+# Episode source media (downloaded from the producer's Drive) and heavy derived media
+ep1_src/
+ep1/assets/video/
+ep1/assets/audio/
+ep1/renders/
+ep1/snapshots/
+ep1/.media/
+__pycache__/
