@@ -33,12 +33,14 @@ def ff(*args):
 # does not have to run per-clip WebGL grading in software. One shared look; each clip's gamma is solved
 # so the graded clip lands on a target average brightness (references sit at 0.20-0.25; we aim a bit
 # higher so nothing reads muddy).
-LOOK = ("eq=contrast=1.07:saturation=0.66,curves=all='0/0.015 0.55/0.52 1/0.9',"
-        "colorbalance=rs=-0.03:gs=-0.01:bs=0.05:rh=0.03:bh=-0.03,vignette=angle=PI/4.4,noise=alls=6:allf=t+u")
-DOCLOOK = ("eq=contrast=1.05:saturation=0.3,curves=all='0/0.04 0.5/0.47 1/0.84',"
-           "colorbalance=rh=0.04:gh=0.02:bh=-0.03,vignette=angle=PI/4")
-BGLOOK = "gblur=sigma=40,eq=saturation=0.5,vignette=angle=PI/3.5"
-TARGET = {"base": 0.27, "ai": 0.26, "day": 0.28, "night": 0.25, "interview": 0.28, "photo": 0.32, "doc": 0.47, "bgblur": 0.11}
+# v2 grade, matched to the reference episodes (mean luma 0.20-0.25, true blacks at ~0.01-0.03,
+# highlights rolled off around 0.8, muted but not washed-out colour, cool shadows, heavy vignette).
+LOOK = ("eq=contrast=1.16:saturation=0.74,curves=all='0/0 0.07/0.012 0.5/0.46 0.85/0.79 1/0.88',"
+        "colorbalance=rs=-0.04:gs=-0.01:bs=0.06:rh=0.03:bh=-0.03,vignette=angle=PI/3.9,noise=alls=4:allf=t+u")
+DOCLOOK = ("eq=contrast=1.1:saturation=0.3,curves=all='0/0 0.1/0.03 0.5/0.44 1/0.82',"
+           "colorbalance=rh=0.04:gh=0.02:bh=-0.03,vignette=angle=PI/3.8")
+BGLOOK = "gblur=sigma=40,eq=saturation=0.5,vignette=angle=PI/3.2"
+TARGET = {"base": 0.21, "ai": 0.2, "day": 0.22, "night": 0.19, "interview": 0.22, "photo": 0.25, "doc": 0.38, "bgblur": 0.08}
 
 
 def look(g):
@@ -85,31 +87,37 @@ def bodycam(x, w=405, y=0, h=720):
 
 
 # ---------------------------------------------------------------- AI shots (from the clean draft track)
-AI_GRADE = {"ai_house_back.mp4": "day", "ai_house_back_b.mp4": "day", "ai_calendar.mp4": "day"}
+AI_GRADE = {"ai_house_back.mp4": "day", "ai_calendar.mp4": "day"}
 AI = {
     "ai_house_back.mp4": (141.9, 144.5),  # Charles (bald, heavyset) from behind, Arizona house, day
-    "ai_house_back_b.mp4": (4.7, 7.1),
     "ai_laptop.mp4": (11.0, 12.0),  # Charles from behind at a desk
-    "ai_family_tv.mp4": (29.6, 33.4),  # family from behind, TV
     "ai_garden_kids.mp4": (17.8, 22.35),  # teen girl + small boy from behind
     "ai_boy_floor.mp4": (23.1, 26.5),  # small boy from behind, playing
     "ai_planet.mp4": (61.2, 63.9),  # apocalyptic planet
     "ai_calendar.mp4": (64.6, 67.85),  # JULY 2020 calendar
     "ai_writer_desk.mp4": (95.8, 103.0),  # faceless man at desk (Chad - never shown)
     "ai_watching.mp4": (108.0, 111.9),  # Charles from behind watching across room
+    "ai_cap_silhouette.mp4": (112.7, 117.0),  # man in a cap, pure silhouette (matches Charles's cap)
     "ai_family_court.mp4": (117.8, 125.35),  # Charles from behind, family court
     "ai_writing.mp4": (126.6, 131.1),  # hand writing "I will..."
 }
 # ---------------------------------------------------------------- real footage (government released)
+B03 = V("03_charles_locked_out.mp4")  # Chandler PD bodycam, Jan 31 2019 (Charles locked out)
 REAL = {
     "real_lori_car.mp4": (DRAFT, 41.9, 48.5, "scale=1080:1920:flags=lanczos", "base"),
     "real_charles_day.mp4": (DRAFT, 135.0, 136.0, "scale=1080:1920:flags=lanczos", "base"),
-    "real_charles_night_a.mp4": (V("03_charles_locked_out.mp4"), 39.0, 45.0, bodycam(500), "night"),
-    "real_charles_night_b.mp4": (V("03_charles_locked_out.mp4"), 89.0, 93.0, bodycam(520), "night"),
-    "real_charles_night_c.mp4": (V("03_charles_locked_out.mp4"), 631.5, 637.0, bodycam(520), "night"),
-    "real_bodycam_walk.mp4": (V("03_charles_locked_out.mp4"), 7.5, 12.5, bodycam(430), "night"),
-    # Chandler PD interview, 2019-07-11: tight 9:16 crop on Lori, and full 16:9 frame for inset cards
-    "real_lori_int_a.mp4": (V("05_lori_interview.mp4"), 1194.5, 1199.5, bodycam(200, 300, 187, 533), "interview"),
+    "real_charles_night_a.mp4": (B03, 39.0, 45.0, bodycam(500), "night"),
+    "real_charles_night_b.mp4": (B03, 89.0, 93.0, bodycam(520), "night"),
+    "real_charles_night_c.mp4": (B03, 631.5, 635.2, bodycam(520), "night"),
+    "real_charles_close.mp4": (B03, 478.5, 485.0, bodycam(800), "night"),  # big man, close, gesturing
+    "real_charles_to_door.mp4": (B03, 620.5, 625.0, bodycam(600), "night"),  # silhouette walking to the door
+    "real_street_walkaway.mp4": (B03, 582.0, 590.0, bodycam(250), "night"),  # figures walking off down the street
+    "real_gate_flashlight.mp4": (B03, 788.0, 792.0, bodycam(760), "night"),
+    "real_bodycam_walk.mp4": (B03, 7.5, 12.5, bodycam(430), "night"),
+    # Chandler PD bodycam, 2019 (640x360): suburban street, used as a 16:9 inset card
+    "real_chandler_street.mp4": (V("01_charles_shooting.mp4"), 4.0, 9.0, "crop=544:306:0:20,scale=1920:1080:flags=lanczos", "base"),
+    # Chandler PD interview, 2019-07-11: tight 9:16 crops on Lori, and full 16:9 frames for inset cards
+    "real_lori_int_a.mp4": (V("05_lori_interview.mp4"), 449.0, 454.0, bodycam(200, 300, 187, 533), "interview"),
     "real_lori_int_b.mp4": (V("05_lori_interview.mp4"), 1995.0, 2003.0, bodycam(200, 300, 187, 533), "interview"),
     "real_lori_int_wide.mp4": (V("05_lori_interview.mp4"), 799.0, 805.0, "scale=1920:1080:flags=lanczos", "interview"),
     "real_lori_int_wide_b.mp4": (V("05_lori_interview.mp4"), 1194.5, 1200.0, "scale=1920:1080:flags=lanczos", "interview"),
@@ -122,11 +130,14 @@ def video():
     for out, (src, t0, t1, vf, g) in REAL.items():
         clip(src, t0, t1, out, vf, g)
     # blurred full-frame backdrops for the 16:9 inset cards
-    for n, (t0, t1) in {"real_lori_int_wide_bg.mp4": (799.0, 805.0), "real_lori_int_wide_b_bg.mp4": (1194.5, 1200.0)}.items():
-        clip(V("05_lori_interview.mp4"), t0, t1, n, "scale=-2:1920,crop=1080:1920", "bgblur")
+    for n, (src, t0, t1) in {"real_lori_int_wide_bg.mp4": (V("05_lori_interview.mp4"), 799.0, 805.0),
+                             "real_lori_int_wide_b_bg.mp4": (V("05_lori_interview.mp4"), 1194.5, 1200.0),
+                             "real_chandler_street_bg.mp4": (V("01_charles_shooting.mp4"), 4.0, 9.0)}.items():
+        clip(src, t0, t1, n, "scale=-2:1920,crop=1080:1920", "bgblur")
     still(DRAFT, 135.7, "charles_day_face.jpg")
-    still(DRAFT, 90.1, "ai_mirror_charles.jpg", g="ai")
-    still(V("03_charles_locked_out.mp4"), 634.2, "charles_night_face.jpg", bodycam(520), "night")
+    still(B03, 635.6, "charles_night_face.jpg", bodycam(520), "night")
+    # detail insert from the toy corner of the boy shot (no child in frame)
+    still(DRAFT, 24.2, "ai_toys_detail.jpg", "crop=560:996:520:880,scale=1080:1920:flags=lanczos", "ai")
 
 
 def images():
