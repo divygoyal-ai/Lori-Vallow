@@ -39,7 +39,7 @@ INTERVIEW = ("POLICE INTERVIEW", "CHANDLER POLICE · JUL 11, 2019")
 FILING = ("COURT FILING", "MARICOPA COUNTY · FEB 2019")
 SHOTS = [
     # --- cold open: meet Charles (real bodycam, full screen; the push carries on through a freeze to his face)
-    dict(id="s01", kind="image", t=0.00, d=4.55, src="charles_portrait.jpg", kb=(1.0, 1.2, 0, 0), origin="50% 22%"),
+    dict(id="s01", kind="image", t=0.00, d=4.55, src="charles_portrait.jpg", kb=(1.0, 1.12, 0, 0), origin="50% 25%"),
     dict(id="s02", kind="image", t=4.55, d=3.60, src="chandler_aerial.jpg", kb=(1.18, 1.3, -6, 6)),
     dict(id="s03", kind="video", t=8.15, d=4.25, src="ai_party.mp4", kb=(1.0, 1.08, 0, 0), origin="35% 40%", ai="REENACTMENT"),
     dict(id="s05", kind="video", t=12.40, d=2.50, src="ai_family_walk.mp4", kb=(1.0, 1.05, 0, 0), ai="REENACTMENT"),

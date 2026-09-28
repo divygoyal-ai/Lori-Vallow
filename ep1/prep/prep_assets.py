@@ -50,6 +50,7 @@ TARGET = {
     "night": (0.19, 0.28),  # night bodycam, full-frame vertical
     "interview": (0.21, 0.28),  # interview room
     "photo": (0.24, 0.32),  # family photos / booking photo
+    "portrait": (0.2, 0.4),  # opening portrait of Charles: keeps natural skin colour
     "place": (0.16, 0.28),  # CC location photos, full frame
     "doc": (0.38, None),  # court filing paper on the dark desk (v2 look)
     "bgblur": (0.07, 0.24),  # blurred backdrops behind the two landscape cards / polaroid
@@ -205,8 +206,10 @@ def images():
     still(["-i", GEN("baby_photo_safe.png")], "photo_charles_baby_bg.jpg",
           "crop=1080:1662:0:238,scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920", "bgblur")
     # opening: Charles, arms crossed (real photo supplied by the producer), full screen
-    src = os.path.join(im, "charles_portrait.png")
-    still(["-i", src], "charles_portrait.jpg", "scale=1190:1920:flags=lanczos,crop=1080:1920:55:0,unsharp=5:5:0.6", "photo")
+    # (pre-scaled to 1080x1920 first: the grade solver measures without scale filters, so it needs the final framing)
+    big = GEN("charles_portrait_1080.png")
+    ff("-i", os.path.join(im, "charles_portrait.png"), "-vf", "scale=1190:1920:flags=lanczos,crop=1080:1920:55:0,unsharp=5:5:0.25", big)
+    still(["-i", big], "charles_portrait.jpg", "null", "portrait")
 
 
 def audio():
