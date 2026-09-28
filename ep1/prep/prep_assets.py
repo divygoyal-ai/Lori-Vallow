@@ -72,7 +72,7 @@ def graded(args, pre, g):
             y, s = _stats(args, f"{cheap},eq=gamma={mid:.3f}:saturation={sat:.3f},{CURVE},{WARM}")
             lo, hi = (mid, hi) if y < ty else (lo, mid)
         gamma = (lo * hi) ** 0.5
-        sat = float(np.clip(sat * ts / max(s, 1e-3), 0.3, 1.2))
+        sat = float(np.clip(sat * ts / max(s, 1e-3), 0.75 if g == "ai" else 0.45, 1.2))  # AI shots keep their colour
     return f"{pre}{extra},eq=gamma={gamma:.3f}:saturation={sat:.3f},{CURVE},{WARM},{VIG}"
 
 
