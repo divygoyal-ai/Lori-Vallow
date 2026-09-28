@@ -33,9 +33,14 @@
    (build, height, hair or baldness, age, typical clothing) in the character bible (section 8). Every
    AI shot of them, including back views, must match it. A reference image per character is
    generated once and reused for every shot.
-7. **Dark true-crime grade, slightly brighter than the references.** Target an average brightness of
-   about 0.28–0.32 (the references sit at 0.20–0.25). Shadows keep detail and faces or subjects stay
-   readable.
+7. **Dark, low-key true-crime grade matched to the producer's reference frame** (the AI laptop shot of
+   Charles, v3 feedback): deep crushed blacks, warm lamp-coloured highlights, muted colour (saturation
+   ~0.25), no added grain. Average brightness ~0.085 for AI shots, ~0.10–0.13 for real footage and
+   photos (they sit on cards over a darker backdrop). One look for everything; only exposure and
+   saturation are solved per clip (`prep/prep_assets.py`).
+   Real 16:9 footage is never cropped and blown up to 9:16: it goes on an evidence card at native
+   resolution over a blurred copy of itself. Symbolic AI images are tagged ILLUSTRATION, AI stand-ins for
+   real moments REENACTMENT, real footage by its source.
 8. **Suspense/mystery music bed that never competes with the VO.** Keep it about 18–22 dB below the
    voice while speech plays, let it rise slightly in pauses, and duck it under key lines.
 9. **Built in HyperFrames.** The whole edit is authored as HyperFrames HTML code: timeline, cuts, grade,

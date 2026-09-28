@@ -8,9 +8,12 @@ Sources live in ../ep1_src (downloaded from the producer's Drive folder):
   videos/*.mp4        government-released bodycam / interview footage
   images/*.jpg        court filings, booking photo, CC location photos
 
-Nothing here grades or edits for style: this only trims, crops to 9:16,
-normalises formats and loudness, and synthesises the few SFX the bundled
-HyperFrames library does not cover. All creative work is in index.html.
+  ai/*                the producer's original AI generations (720x1280) + one AI still
+
+This trims every clip to exactly the length it plays for (baking slow motion
+with motion interpolation), bakes the episode's colour grade, normalises
+loudness and synthesises the few SFX the bundled library does not cover.
+The edit itself lives in build.py -> index.html.
 """
 import os
 import subprocess
@@ -29,147 +32,152 @@ def ff(*args):
     subprocess.run(["ffmpeg", "-loglevel", "error", "-y", *args], check=True)
 
 
-# Dark true-crime grade (a little brighter than the references), baked here so the HyperFrames render
-# does not have to run per-clip WebGL grading in software. One shared look; each clip's gamma is solved
-# so the graded clip lands on a target average brightness (references sit at 0.20-0.25; we aim a bit
-# higher so nothing reads muddy).
-# v2 grade, matched to the reference episodes (mean luma 0.20-0.25, true blacks at ~0.01-0.03,
-# highlights rolled off around 0.8, muted but not washed-out colour, cool shadows, heavy vignette).
-LOOK = ("eq=contrast=1.16:saturation=0.64,curves=all='0/0 0.07/0.012 0.5/0.46 0.85/0.79 1/0.88',"
-        "colorbalance=rs=-0.04:gs=-0.01:bs=0.06:rh=0.03:bh=-0.03,vignette=angle=PI/3.9,noise=alls=4:allf=t+u")
-DOCLOOK = ("eq=contrast=1.1:saturation=0.3,curves=all='0/0 0.1/0.03 0.5/0.44 1/0.82',"
-           "colorbalance=rh=0.04:gh=0.02:bh=-0.03,vignette=angle=PI/3.8")
-BGLOOK = "gblur=sigma=40,eq=saturation=0.5,vignette=angle=PI/3.2"
-TARGET = {"base": 0.21, "ai": 0.2, "day": 0.22, "night": 0.19, "interview": 0.22, "photo": 0.25, "doc": 0.38, "bgblur": 0.08}
+# v3 grade, matched to the producer's reference frame (the AI laptop shot): low-key, deep crushed
+# blacks, warm lamp-coloured highlights, muted colour, no added grain. Every clip gets the same look;
+# only its exposure (gamma) and saturation are solved per clip so it lands on the reference's
+# brightness and colour density, whatever the source looked like.
+CURVE = "curves=all='0/0 0.1/0.03 0.3/0.15 0.6/0.44 0.85/0.74 1/0.88'"
+WARM = "colorbalance=rs=0.01:bs=-0.012:rm=0.012:bm=-0.02:rh=0.045:gh=0.012:bh=-0.05"
+VIG = "vignette=angle=PI/4.4"
+# (target mean luma, target mean saturation). Reference frame: luma 0.06-0.09, saturation 0.21.
+TARGET = {
+    "ai": (0.085, 0.27),  # AI shots: stay right on the reference
+    "real": (0.105, 0.26),  # bodycam / interview / draft real footage (inside cards, over a dark backdrop)
+    "photo": (0.2, 0.3),  # family photos / booking photo (shown on a polaroid print)
+    "place": (0.10, 0.26),  # CC location photos, full frame
+    "doc": (0.26, 0.18),  # court filing paper on the dark desk
+    "bgblur": (0.04, 0.22),  # blurred backdrops behind cards
+}
 
 
-def look(g):
-    return {"doc": DOCLOOK, "bgblur": BGLOOK}.get(g, LOOK)
-
-
-def _mean(args, vf):
-    raw = subprocess.run(["ffmpeg", "-loglevel", "error", *args, "-vf", vf + ",scale=108:192,format=gray", "-f", "rawvideo", "-"],
+def _stats(args, vf):
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", *args, "-vf", vf + ",scale=108:192,format=rgb24", "-f", "rawvideo", "-"],
                          capture_output=True).stdout
-    return np.frombuffer(raw, np.uint8).mean() / 255
-
-
-def solve_gamma(args, pre, g):
-    lo, hi = 0.4, 3.5
-    for _ in range(9):
-        mid = (lo * hi) ** 0.5
-        m = _mean(args, f"{pre},eq=gamma={mid:.3f},{look(g)}")
-        lo, hi = (mid, hi) if m < TARGET[g] else (lo, mid)
-    return (lo * hi) ** 0.5
-
-
-def _levels(args, pre):
-    # per-clip auto-levels: the source's darkest / brightest 1% become true black / near-white, so murky
-    # bodycam and hazy AI footage get the same contrast as the references before the look is applied
-    raw = subprocess.run(["ffmpeg", "-loglevel", "error", *args, "-vf", pre + ",scale=108:192,format=gray", "-f", "rawvideo", "-"],
-                         capture_output=True).stdout
-    y = np.frombuffer(raw, np.uint8) / 255
-    lo, hi = np.percentile(y, 1.0), np.percentile(y, 99.3)
-    lo, hi = min(lo, 0.25), max(hi, lo + 0.25)
-    return f"colorlevels=rimin={lo:.3f}:gimin={lo:.3f}:bimin={lo:.3f}:rimax={hi:.3f}:gimax={hi:.3f}:bimax={hi:.3f}"
+    a = np.frombuffer(raw, np.uint8).reshape(-1, 3) / 255
+    mx, mn = a.max(1), a.min(1)
+    return (a @ [0.2126, 0.7152, 0.0722]).mean(), np.where(mx > 0, (mx - mn) / np.maximum(mx, 1e-6), 0).mean()
 
 
 def graded(args, pre, g):
-    if g not in ("doc", "bgblur"):
-        pre = f"{pre},{_levels(args, pre)}"
-    return f"{pre},eq=gamma={solve_gamma(args, pre, g):.3f},{look(g)}"
+    ty, ts = TARGET[g]
+    extra = ",gblur=sigma=40" if g == "bgblur" else ""
+    # measure on small frames: the look is per-pixel, so upscaling / sharpening / blur can be skipped here
+    drop = ("scale=", "unsharp=", "gblur=") + (("crop=",) if g == "bgblur" else ())
+    cheap = ",".join(f for f in pre.split(",") if not f.startswith(drop)) or "null"
+    sat = 1.0
+    for _ in range(2):  # saturation and exposure interact a little: two passes settle both
+        lo, hi = 0.3, 4.0
+        for _ in range(9):
+            mid = (lo * hi) ** 0.5
+            y, s = _stats(args, f"{cheap},eq=gamma={mid:.3f}:saturation={sat:.3f},{CURVE},{WARM}")
+            lo, hi = (mid, hi) if y < ty else (lo, mid)
+        gamma = (lo * hi) ** 0.5
+        sat = float(np.clip(sat * ts / max(s, 1e-3), 0.3, 1.2))
+    return f"{pre}{extra},eq=gamma={gamma:.3f}:saturation={sat:.3f},{CURVE},{WARM},{VIG}"
 
 
-ENC = ["-an", "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-pix_fmt", "yuv420p", "-r", "30"]
+ENC = ["-an", "-c:v", "libx264", "-preset", "slow", "-crf", "14", "-pix_fmt", "yuv420p", "-r", "30"]
+UP = "scale=1080:1920:flags=lanczos,unsharp=5:5:0.45"  # 720x1280 AI originals -> 1080x1920
 
 
-def clip(src, t0, t1, out, vf="scale=1080:1920:flags=lanczos", g="ai"):
-    if os.path.exists(os.path.join(A, "video", out)):
+def slow(rate, mode="mci"):
+    # slow-motion baked with motion interpolation, so slowed shots stay smooth instead of stepping
+    if rate >= 0.999:
+        return "fps=30"
+    return f"setpts=PTS/{rate},minterpolate=fps=30:mi_mode={mode}" + (":mc_mode=aobmc:vsbmc=1" if mode == "mci" else "")
+
+
+def clip(src, t0, t1, out, vf, g, rate=1.0, mode="mci"):
+    p = os.path.join(A, "video", out)
+    if os.path.exists(p):
         return
     vf = graded(["-ss", f"{t0}", "-to", f"{t1}", "-i", src, "-r", "0.7"], vf, g)
-    ff("-ss", f"{t0}", "-to", f"{t1}", "-i", src, "-vf", vf, *ENC, os.path.join(A, "video", out))
+    vf = f"{slow(rate, mode)},{vf}"
+    ff("-ss", f"{t0}", "-to", f"{t1}", "-i", src, "-vf", vf, *ENC, p)
 
 
-def still(src, t, out, vf="scale=1080:1920:flags=lanczos", g="base"):
-    vf = graded(["-ss", f"{t}", "-i", src, "-frames:v", "1"], vf, g)
-    ff("-ss", f"{t}", "-i", src, "-frames:v", "1", "-vf", vf, "-q:v", "2", os.path.join(A, "img", out))
+def still(args, out, vf, g):
+    ff(*args, "-frames:v", "1", "-vf", graded([*args, "-frames:v", "1"], vf, g), "-q:v", "1", os.path.join(A, "img", out))
 
 
-def bodycam(x, w=405, y=0, h=720):
-    # 16:9 720p bodycam -> 9:16 crop, upscaled, light sharpen to hold detail
-    return f"crop={w}:{h}:{x}:{y},scale=1080:1920:flags=lanczos,unsharp=5:5:0.6"
+AIDIR = os.path.join(SRC, "ai")
+AIV = lambda n: os.path.join(AIDIR, n)
+B03 = V("03_charles_locked_out.mp4")  # Chandler PD bodycam, Jan 31 2019
+B05 = V("05_lori_interview.mp4")  # Chandler PD interview room, Jul 11 2019
+CARD = "crop=1104:621:176:0,unsharp=3:3:0.3"  # full 16:9 bodycam frame at native res, minus the re-uploader's corner bug
+WIDE = "unsharp=3:3:0.3"  # interview room, full 1280x720 frame
+PORTRAIT = "scale=1080:1920:flags=lanczos"  # draft real footage, shown as a portrait card
 
-
-# ---------------------------------------------------------------- AI shots (from the clean draft track)
-AI_GRADE = {"ai_house_back.mp4": "day", "ai_calendar.mp4": "day"}
-AI = {
-    "ai_house_back.mp4": (141.9, 144.5),  # Charles (bald, heavyset) from behind, Arizona house, day
-    "ai_laptop.mp4": (11.0, 12.0),  # Charles from behind at a desk
-    "ai_garden_kids.mp4": (17.8, 22.35),  # teen girl + small boy from behind
-    "ai_boy_floor.mp4": (23.1, 26.5),  # small boy from behind, playing
-    "ai_planet.mp4": (61.2, 63.9),  # apocalyptic planet
-    "ai_calendar.mp4": (64.6, 67.85),  # JULY 2020 calendar
-    "ai_writer_desk.mp4": (95.8, 103.0),  # faceless man at desk (Chad - never shown)
-    "ai_watching.mp4": (108.0, 111.9),  # Charles from behind watching across room
-    "ai_cap_silhouette.mp4": (112.7, 117.0),  # man in a cap, pure silhouette (matches Charles's cap)
-    "ai_family_court.mp4": (117.8, 125.35),  # Charles from behind, family court
-    "ai_writing.mp4": (126.6, 131.1),  # hand writing "I will..."
+# (source, t0, t1, filter, grade, rate) -> every clip is baked to exactly the length it plays for
+CLIPS = {
+    # AI shots: the producer's original generations (720x1280) ...
+    "ai_garden_kids.mp4": (AIV("m3_tCrF.mp4"), 0.3, 3.72, UP, "ai", 1.0),
+    "ai_boy_floor.mp4": (AIV("m6_Lw3h.mp4"), 0.0, 3.62, UP, "ai", 0.77),  # ends before he turns his head
+    "ai_planet.mp4": (AIV("m5_EbgV.mp4"), 0.0, 4.8, UP, "ai", 1.0),
+    "ai_writer_desk.mp4": (AIV("m4_5jy8.mp4"), 0.0, 9.7, UP, "ai", 1.0),
+    "ai_watching.mp4": (AIV("m2_ks9w.mp4"), 0.0, 2.6, UP, "ai", 0.55),  # before the woman's face turns to camera
+    "ai_family_court.mp4": (AIV("m1_s7Z4.mp4"), 0.0, 2.8, UP, "ai", 1.0),
+    # ... and the four with no original, from the clean draft picture (1080x1920)
+    "ai_house_back.mp4": (DRAFT, 141.9, 144.5, "null", "ai", 0.93),
+    "ai_laptop.mp4": (DRAFT, 11.0, 12.0, "null", "ai", 0.69),
+    "ai_calendar.mp4": (DRAFT, 64.8, 67.7, "null", "ai", 1.0),
+    "ai_writing.mp4": (DRAFT, 126.9, 130.6, "null", "ai", 1.0),
+    # real footage from the draft (already 9:16) -> portrait cards
+    "real_charles_day.mp4": (DRAFT, 135.0, 136.0, PORTRAIT, "real", 0.45),
+    "real_lori_car.mp4": (DRAFT, 42.1, 46.4, PORTRAIT, "real", 1.0),
+    # Charles in his cap in the garage: real Chandler PD footage (screen-recorded; the crop drops the cursor)
+    "real_charles_cap.mp4": (DRAFT, 113.0, 116.3, "crop=950:1689:0:115,scale=1080:1920:flags=lanczos", "real", 1.0),
+    # Chandler PD bodycam, Jan 31 2019 -> 16:9 cards at native resolution
+    "real_night_a.mp4": (B03, 39.5, 44.15, CARD, "real", 1.0),
+    "real_night_b.mp4": (B03, 89.0, 91.2, CARD, "real", 1.0),
+    "real_night_c.mp4": (B03, 631.5, 635.1, CARD, "real", 1.0),
+    "real_to_door.mp4": (B03, 621.3, 624.4, CARD, "real", 1.0),
+    "real_night_face.mp4": (B03, 638.0, 641.05, CARD, "real", 1.0),
+    "real_bodycam_walk.mp4": (B03, 7.8, 12.2, CARD, "real", 1.0),
+    "real_gate.mp4": (B03, 788.5, 790.7, CARD, "real", 1.0),
+    "real_charles_close.mp4": (B03, 1019.8, 1022.5, CARD, "real", 1.0),
+    "real_walkaway.mp4": (B03, 583.0, 587.6, CARD, "real", 1.0),
+    # Chandler PD interview with Lori, Jul 11 2019 -> 16:9 cards
+    "real_int_1.mp4": (B05, 1194.5, 1198.3, WIDE, "real", 1.0),
+    "real_int_2.mp4": (B05, 799.5, 803.4, WIDE, "real", 1.0),
+    "real_int_3.mp4": (B05, 1995.0, 1998.0, WIDE, "real", 1.0),
 }
-# ---------------------------------------------------------------- real footage (government released)
-B03 = V("03_charles_locked_out.mp4")  # Chandler PD bodycam, Jan 31 2019 (Charles locked out)
-REAL = {
-    "real_lori_car.mp4": (DRAFT, 41.9, 48.5, "scale=1080:1920:flags=lanczos", "base"),
-    "real_charles_day.mp4": (DRAFT, 135.0, 136.0, "scale=1080:1920:flags=lanczos", "base"),
-    "real_charles_night_a.mp4": (B03, 39.0, 45.0, bodycam(500), "night"),
-    "real_charles_night_b.mp4": (B03, 89.0, 93.0, bodycam(520), "night"),
-    "real_charles_night_c.mp4": (B03, 631.5, 635.2, bodycam(520), "night"),
-    "real_charles_close.mp4": (B03, 1019.8, 1023.9, bodycam(175), "night"),  # big man walking in with officers, lit garage
-    "real_charles_to_door.mp4": (B03, 620.5, 625.0, bodycam(600), "night"),  # silhouette walking to the door
-    "real_street_walkaway.mp4": (B03, 582.0, 590.0, bodycam(250), "night"),  # figures walking off down the street
-    "real_gate_flashlight.mp4": (B03, 788.0, 792.0, bodycam(760), "night"),
-    "real_bodycam_walk.mp4": (B03, 7.5, 12.5, bodycam(430), "night"),
-    # Chandler PD bodycam, 2019 (640x360): suburban street, used as a 16:9 inset card
-    "real_chandler_street.mp4": (V("01_charles_shooting.mp4"), 9.2, 13.2, "crop=544:306:0:20,scale=1920:1080:flags=lanczos", "base"),
-    # Chandler PD interview, 2019-07-11: tight 9:16 crops on Lori, and full 16:9 frames for inset cards
-    "real_lori_int_a.mp4": (V("05_lori_interview.mp4"), 449.0, 454.0, bodycam(200, 300, 187, 533), "interview"),
-    "real_lori_int_b.mp4": (V("05_lori_interview.mp4"), 1995.0, 2003.0, bodycam(200, 300, 187, 533), "interview"),
-    "real_lori_int_wide.mp4": (V("05_lori_interview.mp4"), 799.0, 805.0, "scale=1920:1080:flags=lanczos", "interview"),
-    "real_lori_int_wide_b.mp4": (V("05_lori_interview.mp4"), 1194.5, 1200.0, "scale=1920:1080:flags=lanczos", "interview"),
-}
+BG = "scale=-2:1920,crop=1080:1920"
 
 
 def video():
-    for out, (t0, t1) in AI.items():
-        clip(DRAFT, t0, t1, out, g=AI_GRADE.get(out, "ai"))
-    for out, (src, t0, t1, vf, g) in REAL.items():
-        clip(src, t0, t1, out, vf, g)
-    # blurred full-frame backdrops for the 16:9 inset cards
-    for n, (src, t0, t1) in {"real_lori_int_wide_bg.mp4": (V("05_lori_interview.mp4"), 799.0, 805.0),
-                             "real_lori_int_wide_b_bg.mp4": (V("05_lori_interview.mp4"), 1194.5, 1200.0),
-                             "real_chandler_street_bg.mp4": (V("01_charles_shooting.mp4"), 9.2, 13.2)}.items():
-        clip(src, t0, t1, n, "scale=-2:1920,crop=1080:1920", "bgblur")
-    still(DRAFT, 135.7, "charles_day_face.jpg")
-    still(B03, 635.6, "charles_night_face.jpg", bodycam(520), "night")
-    # detail insert from the toy corner of the boy shot (no child in frame)
-    still(DRAFT, 24.2, "ai_toys_detail.jpg", "crop=480:853:600:1067,scale=1080:1920:flags=lanczos", "ai")
+    for out, (src, t0, t1, vf, g, rate) in CLIPS.items():
+        mode = "blend" if src in (B03, B05) else "mci"
+        clip(src, t0, t1, out, vf, g, rate, mode)
+        if out.startswith("real_"):  # blurred, darkened full-frame backdrop behind every card
+            clip(src, t0, t1, out.replace(".mp4", "_bg.mp4"), BG if vf != PORTRAIT and not vf.startswith("crop=950") else "scale=1080:1920",
+                 "bgblur", rate, "blend")
+    # freeze of Charles at the end of his daylight clip (the push carries on to his face)
+    still(["-ss", "135.95", "-i", DRAFT], "charles_day_face.jpg", PORTRAIT, "real")
 
 
 def images():
     im = os.path.join(SRC, "images")
     img = lambda out: os.path.join(A, "img", out)
-    for n, out, g in [
-        ("div_p01.jpg", "doc_p01.jpg", "doc"),
-        ("div_p03.jpg", "doc_p03.jpg", "doc"),
-        ("div_p04.jpg", "doc_p04.jpg", "doc"),
-        ("mug_lori_kauai.jpg", "lori_booking.jpg", "photo"),
-    ]:
-        ff("-i", os.path.join(im, n), "-vf", graded(["-i", os.path.join(im, n)], "null", g), "-q:v", "2", img(out))
-    # blurred backdrop behind the booking-photo polaroid
-    src = os.path.join(im, "mug_lori_kauai.jpg")
-    pre = "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920"
-    ff("-i", src, "-vf", graded(["-i", src], pre, "bgblur"), "-q:v", "2", img("lori_booking_bg.jpg"))
+    for n, out in [("div_p01.jpg", "doc_p01.jpg"), ("div_p03.jpg", "doc_p03.jpg"), ("div_p04.jpg", "doc_p04.jpg")]:
+        src = os.path.join(im, n)
+        ff("-i", src, "-vf", graded(["-i", src], "null", "doc"), "-q:v", "1", img(out))
     for n in ["chandler_aerial.jpg", "gilbert.jpg", "maricopa_court.jpg"]:
         src = os.path.join(im, n)
-        ff("-i", src, "-vf", graded(["-i", src], "scale=-2:2200:flags=lanczos", "base"), "-q:v", "2", img(n))
+        ff("-i", src, "-vf", graded(["-i", src], "scale=-2:2200:flags=lanczos", "place"), "-q:v", "1", img(n))
+    # AI: the family on the couch, Charles bald and heavyset, everyone from behind (producer's image)
+    src = os.path.join(AIDIR, "chatgpt_img.png")
+    ff("-i", src, "-vf", graded(["-i", src], "scale=1080:1920:flags=lanczos,unsharp=5:5:0.4", "ai"), "-q:v", "1", img("ai_family_tv.jpg"))
+    # real photos -> polaroids (cropped to the print's 648:820 aspect) + blurred backdrops
+    photos = {
+        "lori_booking.jpg": (["-i", os.path.join(im, "mug_lori_kauai.jpg")], "crop=440:557:172:4,scale=648:820:flags=lanczos"),
+        "photo_wedding.jpg": (["-ss", "138.3", "-i", DRAFT], "crop=1080:1367:0:250"),
+        "photo_charles_baby.jpg": (["-ss", "134.2", "-i", DRAFT], "crop=830:1050:250:185"),  # baby kept out of frame
+        "photo_charles.jpg": (["-ss", "133.2", "-i", DRAFT], "crop=1080:1367:0:150"),
+    }
+    for out, (args, crop) in photos.items():
+        still(args, out, crop, "photo")
+        still(args, out.replace(".jpg", "_bg.jpg"), f"{crop},scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920", "bgblur")
 
 
 def audio():
