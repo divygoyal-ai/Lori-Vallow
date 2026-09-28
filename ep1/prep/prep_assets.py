@@ -42,7 +42,8 @@ VIG = "vignette=angle=PI/4.4"
 # (target mean luma, target mean saturation). Reference frame: luma 0.06-0.09, saturation 0.21.
 TARGET = {
     "ai": (0.085, 0.27),  # AI shots: stay right on the reference
-    "real": (0.105, 0.26),  # bodycam / interview / draft real footage (inside cards, over a dark backdrop)
+    "day": (0.07, 0.18),  # the two daylight AI shots: pushed down to a dim, desaturated late-day look
+    "real": (0.12, 0.26),  # bodycam / interview / draft real footage (inside cards, over a dark backdrop)
     "photo": (0.2, 0.3),  # family photos / booking photo (shown on a polaroid print)
     "place": (0.10, 0.26),  # CC location photos, full frame
     "doc": (0.26, 0.18),  # court filing paper on the dark desk
@@ -118,9 +119,9 @@ CLIPS = {
     "ai_watching.mp4": (AIV("m2_ks9w.mp4"), 0.0, 2.6, UP, "ai", 0.55),  # before the woman's face turns to camera
     "ai_family_court.mp4": (AIV("m1_s7Z4.mp4"), 0.0, 2.8, UP, "ai", 1.0),
     # ... and the four with no original, from the clean draft picture (1080x1920)
-    "ai_house_back.mp4": (DRAFT, 141.9, 144.5, "null", "ai", 0.93),
+    "ai_house_back.mp4": (DRAFT, 141.9, 144.5, "null", "day", 0.93),
     "ai_laptop.mp4": (DRAFT, 11.0, 12.0, "null", "ai", 0.69),
-    "ai_calendar.mp4": (DRAFT, 64.8, 67.7, "null", "ai", 1.0),
+    "ai_calendar.mp4": (DRAFT, 64.8, 67.7, "null", "day", 1.0),
     "ai_writing.mp4": (DRAFT, 126.9, 130.6, "null", "ai", 1.0),
     # real footage from the draft (already 9:16) -> portrait cards
     "real_charles_day.mp4": (DRAFT, 135.0, 136.0, PORTRAIT, "real", 0.45),
