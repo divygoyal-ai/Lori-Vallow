@@ -13,7 +13,7 @@ def one(job):
     if kind == "clip":
         src, t0, t1, vf, g, rate = spec
         p.clip(src, t0, t1, out, vf, g, rate, "blend" if src == p.B05 else "mci")
-        if src == p.B05:
+        if out in p.CARDS:
             p.clip(src, t0, t1, out.replace(".mp4", "_bg.mp4"), p.BG, "bgblur", rate, "blend")
     else:
         name, dur, g, rate = spec
@@ -28,7 +28,5 @@ if __name__ == "__main__":
     with Pool(4) as pool:
         for out in pool.imap_unordered(one, jobs):
             print("built", out, flush=True)
-    src, vf = p.real_v("charles_day")
-    p.still(["-ss", "0.95", "-i", src], "charles_day_face.jpg", vf, "real")
     p.images()
     print("all done", flush=True)

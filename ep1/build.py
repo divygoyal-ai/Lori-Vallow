@@ -39,20 +39,18 @@ INTERVIEW = ("POLICE INTERVIEW", "CHANDLER POLICE · JUL 11, 2019")
 FILING = ("COURT FILING", "MARICOPA COUNTY · FEB 2019")
 SHOTS = [
     # --- cold open: meet Charles (real bodycam, full screen; the push carries on through a freeze to his face)
-    dict(id="s01v", kind="video", t=0.00, d=2.22, src="real_charles_day.mp4", grp="s01", kb=(1.0, 1.22, 0, 0), origin="42% 16%",
-         tag=("BODYCAM", "CHANDLER POLICE · 2019")),
-    dict(id="s01i", kind="image", t=2.22, d=2.33, src="charles_day_face.jpg", grp="s01", kb=(1.0, 1.22, 0, 0), origin="42% 16%"),
+    dict(id="s01", kind="image", t=0.00, d=4.55, src="charles_portrait.jpg", kb=(1.0, 1.2, 0, 0), origin="50% 22%"),
     dict(id="s02", kind="image", t=4.55, d=3.60, src="chandler_aerial.jpg", kb=(1.18, 1.3, -6, 6)),
-    dict(id="s03", kind="video", t=8.15, d=4.25, src="ai_house_back.mp4", kb=(1.0, 1.06, 0, 0), ai="REENACTMENT"),
-    dict(id="s05", kind="video", t=12.40, d=2.50, src="ai_family_tv.mp4", kb=(1.0, 1.05, 0, 0), origin="30% 50%", ai="REENACTMENT"),
+    dict(id="s03", kind="video", t=8.15, d=4.25, src="ai_party.mp4", kb=(1.0, 1.08, 0, 0), origin="35% 40%", ai="REENACTMENT"),
+    dict(id="s05", kind="video", t=12.40, d=2.50, src="ai_family_walk.mp4", kb=(1.0, 1.05, 0, 0), ai="REENACTMENT"),
     # --- Lori (real) and the kids (never faces)
     dict(id="s06", kind="image", t=14.90, d=2.08, src="photo_wedding.jpg", kb=(1.0, 1.1, 0, 0), origin="50% 30%",
          tag=("FAMILY PHOTO", "CHARLES & LORI VALLOW")),
     dict(id="s07", kind="video", t=16.98, d=3.42, src="ai_garden_kids.mp4", kb=(1.0, 1.06, 0, 0), ai="REENACTMENT"),
     dict(id="s08", kind="video", t=20.40, d=4.70, src="ai_boy_floor.mp4", kb=(1.0, 1.08, 0, 0), ai="REENACTMENT"),
-    dict(id="s09", kind="image", t=25.10, d=3.40, src="photo_charles_baby.jpg", kb=(1.0, 1.12, 0, 0), origin="50% 30%",
-         tag=("FAMILY PHOTO", "CHARLES VALLOW")),
-    dict(id="s10", kind="image", t=28.50, d=3.45, src="gilbert.jpg", kb=(1.12, 1.2, 4, -4)),
+    dict(id="s09", kind="polaroid", t=25.10, d=3.40, src="photo_charles_baby.jpg", label="CHARLES VALLOW", tall=True,
+         tag=("FAMILY PHOTO", "VALLOW FAMILY")),
+    dict(id="s10", kind="video", t=28.50, d=3.45, src="ai_family_tv.mp4", kb=(1.0, 1.06, 0, 0), origin="30% 50%", ai="REENACTMENT"),
     # --- the turn: Charles is terrified (real bodycam, Jan 31 2019)
     dict(id="s11", kind="video", origin=STAMP_FREE, t=31.95, d=4.65, src="real_night_a.mp4", kb=(1.14, 1.24, 0, 0), tag=BODYCAM_JAN),
     dict(id="s12", kind="video", t=36.60, d=4.30, src="real_lori_car.mp4", kb=(1.0, 1.1, 0, 0), origin="55% 25%",
@@ -83,8 +81,8 @@ SHOTS = [
          cam=[(0.0, 770, 900, 1.0), (4.55, 770, 905, 1.08)],
          hl=[(2.0, 1201, 829, 76, 40), (2.15, 264, 889, 134, 40), (2.75, 851, 940, 424, 40), (2.95, 266, 999, 98, 40)]),
     # --- the writer from out of state (Chad - never seen)
-    dict(id="s25", kind="video", t=94.90, d=9.70, src="ai_writer_desk.mp4", kb=(1.0, 1.12, 0, 0), ai="REENACTMENT"),
-    dict(id="s26", kind="card", t=104.60, d=3.00, src="real_int_3.mp4", kb=(1.2, 1.4, 0, 0), origin="27% 55%", tag=INTERVIEW),
+    dict(id="s25", kind="video", t=94.90, d=7.70, src="ai_writer_desk.mp4", kb=(1.0, 1.12, 0, 0), ai="REENACTMENT"),
+    dict(id="s26", kind="card", t=102.60, d=5.00, src="real_int_3.mp4", kb=(1.2, 1.4, 0, 0), origin="27% 55%", tag=INTERVIEW),
     # --- Charles acts
     dict(id="s27", kind="video", t=107.60, d=4.70, src="ai_watching.mp4", kb=(1.0, 1.05, 0, 0), ai="REENACTMENT"),
     dict(id="s28", kind="video", origin=STAMP_FREE, t=112.30, d=4.40, src="real_bodycam_walk.mp4", kb=(1.14, 1.20, 0, 0), tag=BODYCAM_JAN),
@@ -99,7 +97,7 @@ SHOTS = [
          hl=[(0.3, 800, 993, 478, 40), (2.2, 756, 940, 520, 40), (2.45, 266, 999, 98, 40)]),
     dict(id="s33", kind="video", origin=STAMP_FREE, t=132.00, d=2.20, src="real_gate.mp4", kb=(1.14, 1.19, 0, 0), tag=BODYCAM_JAN),
     dict(id="s34", kind="video", origin=STAMP_FREE, t=134.20, d=2.20, src="real_night_b.mp4", kb=(1.14, 1.22, 0, 0), tag=BODYCAM_JAN),
-    dict(id="s35", kind="image", t=136.40, d=4.50, src="maricopa_court.jpg", kb=(1.1, 1.2, -5, 5),
+    dict(id="s35", kind="card", t=136.40, d=4.50, src="real_court.mp4", kb=(1.0, 1.08, 0, 0), origin="45% 45%",
          loc=("MARICOPA COUNTY SUPERIOR COURT", "PHOENIX, ARIZONA")),
     dict(id="s36", kind="image", t=140.90, d=2.20, src="photo_charles.jpg", kb=(1.0, 1.1, 0, 0), origin="50% 30%",
          tag=("FAMILY PHOTO", "CHARLES VALLOW")),
@@ -243,7 +241,7 @@ def build():
         elif k == "polaroid":
             body.append(f'<div id="{sid}" class="clip scene" {timing} data-track-index="{track}">'
                         f'<img class="fill" src="assets/img/{s["src"].replace(".jpg", "_bg.jpg")}" alt="" />'
-                        f'<div id="{sid}-card" class="polaroid"><img src="assets/img/{s["src"]}" alt="" />'
+                        f'<div id="{sid}-card" class="polaroid{" tall" if s.get("tall") else ""}"><img src="assets/img/{s["src"]}" alt="" />'
                         f'<div class="polaroid-label">{s["label"]}</div></div></div>')
             rot = -2 if i % 2 else 2
             js.append(f'tl.fromTo("#{sid}-card", {{scale:1.16, rotation:{rot * 2}, opacity:0}}, '
@@ -399,6 +397,8 @@ html, body {{ width: {W}px; height: {H}px; overflow: hidden; background: var(--i
 .polaroid {{ position: absolute; left: 190px; top: 470px; width: 700px; padding: 26px 26px 110px; background: #efe9dc;
   box-shadow: 0 40px 90px rgba(0,0,0,0.75); }}
 .polaroid img {{ display: block; width: 648px; height: 820px; object-fit: cover; }}
+.polaroid.tall {{ top: 300px; }}
+.polaroid.tall img {{ height: 1000px; }}
 .polaroid-label {{ position: absolute; left: 0; right: 0; bottom: 30px; text-align: center; color: #2b2724; font-weight: 600; font-size: 34px;
   letter-spacing: 0.3em; }}
 /* documents */

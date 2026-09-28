@@ -136,21 +136,24 @@ CLIPS = {
     "ai_garden_kids.mp4": (AIV("m3_tCrF.mp4"), 0.3, 3.72, UP, "ai", 1.0),
     "ai_boy_floor.mp4": (AIV("m6_Lw3h.mp4"), 0.0, 3.62, UP, "ai", 0.77),  # ends before he turns his head
     "ai_planet.mp4": (AIV("m5_EbgV.mp4"), 0.0, 4.8, UP, "ai", 1.0),
-    "ai_writer_desk.mp4": (AIV("m4_5jy8.mp4"), 0.0, 9.7, UP, "ai", 1.0),
+    "ai_writer_desk.mp4": (AIV("m4_5jy8.mp4"), 0.0, 7.7, UP, "ai", 1.0),
     # ... and new Magnific generations (Nano Banana 2 reference -> Kling 3.0), no faces anywhere
-    "ai_house_back.mp4": (GEN("v_house.mp4"), 0.0, 4.25, KL, "day", 1.0),
-    "ai_family_tv.mp4": (GEN("v_family_tv2_clean.mp4"), 0.2, 2.7, KL, "ai", 1.0),  # TV screen softened (no AI text)
+    "ai_party.mp4": (GEN("v_party_clean.mp4"), 0.0, 4.0, UP, "ai", 0.94),  # Kling 2.5, first second dropped (a guest faced camera), one background head softened
+    "ai_family_walk.mp4": (GEN("v_walk.mp4"), 0.3, 2.05, UP, "ai", 0.7),  # Kling 2.5, slow motion, all from behind
+    "ai_family_tv.mp4": (GEN("v_family_tv2_clean.mp4"), 0.2, 3.65, KL, "ai", 1.0),  # TV screen softened (no AI text)
     "ai_calendar.mp4": (GEN("v_calendar.mp4"), 0.0, 2.9, KL, "ai", 1.0),
     "ai_watching.mp4": (GEN("v_watching.mp4"), 0.0, 4.7, KL, "ai", 1.0),
     "ai_family_court.mp4": (GEN("v_court.mp4"), 0.0, 2.8, KL, "ai", 1.0),
     "ai_writing.mp4": (GEN("v_writing.mp4"), 0.5, 4.2, KL, "ai", 1.0),
     # Chandler PD interview with Lori, Jul 11 2019 -> the two landscape cards
     "real_int_1.mp4": (B05, 1194.5, 1198.3, WIDE, "interview", 1.0),
-    "real_int_3.mp4": (B05, 1995.0, 1998.0, WIDE, "interview", 1.0),
+    "real_int_3.mp4": (B05, 1993.0, 1998.0, WIDE, "interview", 1.0),
+    # Maricopa County Superior Court (CC photo), whole sign on a landscape card
+    "real_court.mp4": (GEN("court_loop.mp4"), 0.0, 4.5, "null", "place", 1.0),
 }
+CARDS = {"real_int_1.mp4", "real_int_3.mp4", "real_court.mp4"}  # landscape cards get a blurred backdrop
 # real footage, full-screen vertical: (crop name, seconds used, grade, rate)
 REAL_V = {
-    "real_charles_day.mp4": ("charles_day", 1.0, "real", 0.45),  # draft: Chandler PD bodycam, daylight
     "real_lori_car.mp4": ("lori_car", 4.3, "real", 1.0),
     "real_charles_cap.mp4": ("charles_cap", 3.3, "real", 1.0),  # Charles in his cap in the garage (cursor cropped out)
     "real_night_a.mp4": ("night_a", 4.65, "night", 1.0),  # Chandler PD bodycam, Jan 31 2019
@@ -170,14 +173,11 @@ BG = "scale=-2:1920,crop=1080:1920"
 def video():
     for out, (src, t0, t1, vf, g, rate) in CLIPS.items():
         clip(src, t0, t1, out, vf, g, rate, "blend" if src == B05 else "mci")
-        if src == B05:  # blurred, darkened full-frame backdrop behind the two landscape cards
+        if out in CARDS:  # blurred, darkened full-frame backdrop behind the landscape cards
             clip(src, t0, t1, out.replace(".mp4", "_bg.mp4"), BG, "bgblur", rate, "blend")
     for out, (name, dur, g, rate) in REAL_V.items():
         src, vf = real_v(name)
         clip(src, 0, dur, out, vf, g, rate, "mci" if name == "charles_day" else "blend")
-    # freeze of Charles at the end of his daylight clip (the push carries on to his face)
-    src, vf = real_v("charles_day")
-    still(["-ss", "0.95", "-i", src], "charles_day_face.jpg", vf, "real")
 
 
 def images():
@@ -186,7 +186,7 @@ def images():
     for n, out in [("div_p01.jpg", "doc_p01.jpg"), ("div_p03.jpg", "doc_p03.jpg"), ("div_p04.jpg", "doc_p04.jpg")]:
         src = os.path.join(im, n)
         ff("-i", src, "-vf", graded(["-i", src], "null", "doc"), "-q:v", "1", img(out))
-    for n in ["chandler_aerial.jpg", "gilbert.jpg", "maricopa_court.jpg"]:
+    for n in ["chandler_aerial.jpg"]:
         src = os.path.join(im, n)
         ff("-i", src, "-vf", graded(["-i", src], "scale=-2:2200:flags=lanczos", "place"), "-q:v", "1", img(n))
     # booking photo -> polaroid print (+ blurred backdrop); family photos -> full-screen stills
@@ -196,11 +196,17 @@ def images():
     still(src, "lori_booking_bg.jpg", f"{crop},scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920", "bgblur")
     photos = {
         "photo_wedding.jpg": (["-ss", "138.3", "-i", DRAFT], "null"),
-        "photo_charles_baby.jpg": (["-ss", "134.2", "-i", DRAFT], "crop=590:1050:380:185,scale=1080:1920:flags=lanczos"),  # baby out of frame
+        # Charles holding a baby, shown whole on a tall polaroid print; the baby's face is blurred (gen/baby_photo_safe.png)
+        "photo_charles_baby.jpg": (["-i", GEN("baby_photo_safe.png")], "crop=1080:1662:0:238"),
         "photo_charles.jpg": (["-ss", "133.2", "-i", DRAFT], "null"),
     }
     for out, (args, crop) in photos.items():
         still(args, out, crop, "photo")
+    still(["-i", GEN("baby_photo_safe.png")], "photo_charles_baby_bg.jpg",
+          "crop=1080:1662:0:238,scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920", "bgblur")
+    # opening: Charles, arms crossed (real photo supplied by the producer), full screen
+    src = os.path.join(im, "charles_portrait.png")
+    still(["-i", src], "charles_portrait.jpg", "scale=1190:1920:flags=lanczos,crop=1080:1920:55:0,unsharp=5:5:0.6", "photo")
 
 
 def audio():
