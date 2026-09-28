@@ -12,10 +12,13 @@ Rules this edit follows (see docs/STYLE_GUIDE.md section 0):
   - one dark, low-key true-crime grade (baked in prep), matched to the producer's reference frame
   - real footage is never blown up: 16:9 bodycam/interview sits on cards at native resolution
   - producer's music bed kept well under the VO; SFX sparse and motivated
-  - no captions (added later)
+  - captions in the reference house style (captions.py): Anton caps, one red keyword, quotes in Playfair italic
 """
 import json
 import os
+import re
+
+from captions import build_captions
 
 W, H = 1080, 1920
 DUR = 155.0
@@ -258,7 +261,7 @@ def build():
                 for j, (_, x, y, w, h) in enumerate(s["hl"]))
             body.append(f'<div id="{sid}" class="clip scene docbg" {timing} data-track-index="{track}">'
                         f'<div id="{sid}-cam" class="doccam"><div class="paper">'
-                        f'<img src="assets/img/{uniq}" alt="" />{hls}</div></div></div>')
+                        f'<img src="assets/img/{uniq}" alt="" />{hls}</div></div><div class="docshade"></div></div>')
             cam = s["cam"]
 
             def pos(cx, cy, sc):
@@ -288,8 +291,31 @@ def build():
     return body, js
 
 
+def caption_html():
+    body, js = [], []
+    caps = build_captions()
+    for i, c in enumerate(caps):
+        t, d = c["s"], c["end"] - c["s"]
+        if c["quote"]:
+            text = c["text"]
+            if i == 0 or not caps[i - 1]["quote"]:
+                text = "\u201c" + text
+            if i + 1 == len(caps) or not caps[i + 1]["quote"]:
+                text = text + "\u201d"
+            inner = f'<div class="cap cap-quote">{text}</div>'
+        else:
+            inner = '<div class="cap">' + "".join(
+                f'<span class="red">{w[1:-1] if w.startswith("*") else w}</span>' if "*" in w else w
+                for w in re.split(r"(\*[^*]+\*)", c["text"])) + "</div>"
+        body.append(f'<div id="cap{i}" class="clip ovl" data-start="{t:.2f}" data-duration="{d:.2f}" data-track-index="12">'
+                    f'<div class="cap-wrap">{inner}</div></div>')
+        js.append(f'tl.fromTo("#cap{i} .cap", {{opacity:0}}, {{opacity:1, duration:0.08, ease:"none"}}, {t:.2f});')
+    return body, js
+
+
 def main():
     body, js = build()
+    cap_body, cap_js = caption_html()
     audio = [
         f'<audio id="vo" src="assets/audio/vo.wav" data-start="0" data-duration="{DUR - 0.2}" data-track-index="20" data-volume="1"></audio>',
         '<audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="%.2f" data-track-index="21" data-volume="1" '
@@ -345,6 +371,7 @@ tl.fromTo("#endcard .end-rule", {{scaleX:0}}, {{scaleX:1, duration:0.4, ease:"po
 <title>Lori Vallow · Episode 1 · The Man Who Was Afraid</title>
 <script src="assets/gsap.min.js"></script>
 <style>
+@font-face {{ font-family: "Playfair"; src: url("assets/fonts/playfair-display-latin-400-italic.woff2") format("woff2"); font-style: italic; font-weight: 400; }}
 @font-face {{ font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2") format("woff2"); font-weight: 400; }}
 @font-face {{ font-family: "Oswald"; src: url("assets/fonts/oswald-latin-400-normal.woff2") format("woff2"); font-weight: 400; }}
 @font-face {{ font-family: "Oswald"; src: url("assets/fonts/oswald-latin-500-normal.woff2") format("woff2"); font-weight: 500; }}
@@ -383,7 +410,7 @@ html, body {{ width: {W}px; height: {H}px; overflow: hidden; background: var(--i
   text-shadow: 0 6px 30px rgba(0,0,0,0.75); }}
 .title-rule {{ width: 170px; height: 6px; background: var(--red); }}
 /* name super */
-.name-wrap {{ position: absolute; left: 0; right: 0; top: 1290px; display: flex; flex-direction: column; align-items: center; gap: 10px; }}
+.name-wrap {{ position: absolute; left: 0; right: 0; top: 1080px; display: flex; flex-direction: column; align-items: center; gap: 10px; }}
 .name-main {{ font-family: "Anton", sans-serif; color: var(--white); font-size: 92px; text-shadow: 0 6px 26px rgba(0,0,0,0.8); }}
 .name-sub {{ color: var(--white); background: var(--red); font-weight: 600; font-size: 28px; letter-spacing: 0.22em; padding: 4px 14px 4px 18px; }}
 /* location card, top-center */
@@ -406,6 +433,8 @@ html, body {{ width: {W}px; height: {H}px; overflow: hidden; background: var(--i
 .doccam {{ position: absolute; left: 0; top: 0; width: {1445 * DOC_K:.0f}px; height: {1870 * DOC_K:.0f}px; transform-origin: 0 0; }}
 .paper {{ position: absolute; left: 0; top: 0; width: {1445 * DOC_K:.0f}px; height: {1870 * DOC_K:.0f}px; box-shadow: 0 40px 120px rgba(0,0,0,0.85); }}
 .paper img {{ display: block; width: {1445 * DOC_K:.0f}px; height: {1870 * DOC_K:.0f}px; }}
+.docshade {{ position: absolute; left: 0; right: 0; top: 1180px; bottom: 0;
+  background: linear-gradient(to bottom, rgba(6,6,7,0) 0%, rgba(6,6,7,0.8) 30%, rgba(6,6,7,0.9) 100%); }}  /* keeps captions readable over paper */
 .hl {{ position: absolute; transform-origin: 0 50%; background: rgba(208,32,42,0.2); mix-blend-mode: multiply; }}
 .hl-u {{ position: absolute; left: 0; right: 0; bottom: -6px; height: 11px; background: var(--red); }}
 /* end card */
@@ -415,6 +444,11 @@ html, body {{ width: {W}px; height: {H}px; overflow: hidden; background: var(--i
 .end-follow {{ color: rgba(255,255,255,0.7); font-weight: 500; font-size: 28px; letter-spacing: 0.3em; }}
 .end-rule {{ width: 120px; height: 5px; background: var(--red); margin: 14px 0; }}
 .end-series {{ font-family: "Anton", sans-serif; color: var(--white); font-size: 72px; letter-spacing: 0.03em; }}
+/* captions: reference house style (Anton caps, white, soft shadow, one red keyword; quotes in Playfair italic) */
+.cap-wrap {{ position: absolute; left: 70px; right: 70px; top: 1380px; height: 250px; display: flex; align-items: center; justify-content: center; }}
+.cap {{ font-family: "Anton", sans-serif; font-size: 88px; line-height: 1.04; letter-spacing: 0.01em; text-transform: uppercase; color: var(--white);
+  text-align: center; text-shadow: 0 4px 18px rgba(0,0,0,0.85), 0 0 4px rgba(0,0,0,0.9), 0 2px 2px rgba(0,0,0,0.6); }}
+.cap-quote {{ font-family: "Playfair"; font-style: italic; font-size: 70px; line-height: 1.12; text-transform: none; letter-spacing: 0; }}
 #fader {{ position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }}
 </style>
 </head>
@@ -423,6 +457,7 @@ html, body {{ width: {W}px; height: {H}px; overflow: hidden; background: var(--i
 {chr(10).join(body)}
 <div id="fader"></div>
 {title}
+{chr(10).join(cap_body)}
 {chr(10).join(audio)}
 </div>
 <script>
@@ -432,6 +467,7 @@ const tl = gsap.timeline({{ paused: true }});
 tl.fromTo("#fader", {{opacity:0}}, {{opacity:0.55, duration:{CUT_TO_BLACK - 148.4:.2f}, ease:"power1.in"}}, 148.4);
 tl.set("#fader", {{opacity:0}}, {CUT_TO_BLACK});
 {js_extra}
+{chr(10).join(cap_js)}
 window.__timelines["main"] = tl;
 </script>
 </body>
