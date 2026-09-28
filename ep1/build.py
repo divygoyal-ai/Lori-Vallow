@@ -45,7 +45,7 @@ SHOTS = [
     dict(id="s01", kind="image", t=0.00, d=4.55, src="charles_portrait.jpg", kb=(1.0, 1.12, 0, 0), origin="50% 25%"),
     dict(id="s02", kind="image", t=4.55, d=3.60, src="chandler_aerial.jpg", kb=(1.18, 1.3, -6, 6)),
     dict(id="s03", kind="video", t=8.15, d=4.25, src="ai_party.mp4", kb=(1.0, 1.08, 0, 0), origin="35% 40%", ai="REENACTMENT"),
-    dict(id="s05", kind="video", t=12.40, d=2.50, src="ai_family_walk.mp4", kb=(1.0, 1.05, 0, 0), ai="REENACTMENT"),
+    dict(id="s05", kind="video", t=12.40, d=2.50, src="ai_family_hug.mp4", kb=(1.0, 1.05, 0, 0), ai="REENACTMENT"),
     # --- Lori (real) and the kids (never faces)
     dict(id="s06", kind="image", t=14.90, d=2.08, src="photo_wedding.jpg", kb=(1.0, 1.1, 0, 0), origin="50% 30%",
          tag=("FAMILY PHOTO", "CHARLES & LORI VALLOW")),
@@ -53,7 +53,7 @@ SHOTS = [
     dict(id="s08", kind="video", t=20.40, d=4.70, src="ai_boy_floor.mp4", kb=(1.0, 1.08, 0, 0), ai="REENACTMENT"),
     dict(id="s09", kind="polaroid", t=25.10, d=3.40, src="photo_charles_baby.jpg", label="CHARLES VALLOW", tall=True,
          tag=("FAMILY PHOTO", "VALLOW FAMILY")),
-    dict(id="s10", kind="video", t=28.50, d=3.45, src="ai_family_tv.mp4", kb=(1.0, 1.06, 0, 0), origin="30% 50%", ai="REENACTMENT"),
+    dict(id="s10", kind="image", t=28.50, d=3.45, src="ai_family_tv.jpg", kb=(1.0, 1.05, 0, 0), origin="30% 50%", ai="REENACTMENT"),
     # --- the turn: Charles is terrified (real bodycam, Jan 31 2019)
     dict(id="s11", kind="video", origin=STAMP_FREE, t=31.95, d=4.65, src="real_night_a.mp4", kb=(1.14, 1.24, 0, 0), tag=BODYCAM_JAN),
     dict(id="s12", kind="video", t=36.60, d=4.30, src="real_lori_car.mp4", kb=(1.0, 1.1, 0, 0), origin="55% 25%",
@@ -65,7 +65,7 @@ SHOTS = [
          cam=[(0.0, 722, 935, 0.7), (1.2, 952, 685, 1.6), (3.0, 952, 685, 1.6), (3.7, 500, 410, 1.6),
               (7.4, 500, 410, 1.6), (8.2, 900, 410, 1.6)],
          hl=[(1.45, 868, 664, 176, 42), (4.85, 262, 392, 490, 40), (8.95, 958, 390, 214, 42)]),
-    dict(id="s16", kind="video", t=60.10, d=4.80, src="ai_planet.mp4", kb=(1.0, 1.1, 0, 0), ai="ILLUSTRATION"),
+    dict(id="s16", kind="image", t=60.10, d=4.80, src="ai_world.jpg", kb=(1.0, 1.1, 0, 0), origin="45% 45%", ai="ILLUSTRATION"),
     dict(id="s17", kind="video", t=64.90, d=2.90, src="ai_calendar.mp4", kb=(1.0, 1.08, 0, 0), ai="ILLUSTRATION"),
     dict(id="s18a", kind="doc", t=67.80, d=2.50, src="doc_p03.jpg", tag=FILING,
          cam=[(0.0, 560, 890, 1.45), (2.5, 570, 890, 1.52)],
@@ -93,7 +93,7 @@ SHOTS = [
     dict(id="s30", kind="doc", t=119.50, d=3.10, src="doc_p01.jpg", tag=("COURT FILING", "MARICOPA COUNTY SUPERIOR COURT"),
          cam=[(0.0, 560, 820, 1.2), (3.1, 580, 830, 1.3)],
          hl=[(0.8, 266, 722, 272, 36), (1.8, 266, 887, 244, 36)]),
-    dict(id="s31", kind="video", t=122.60, d=3.70, src="ai_writing.mp4", kb=(1.0, 1.08, 0, 0), ai="REENACTMENT"),
+    dict(id="s31", kind="image", t=122.60, d=3.70, src="ai_i_will.jpg", kb=(1.0, 1.1, 0, 0), origin="40% 55%", ai="REENACTMENT"),
     # --- the threat, in the court record
     dict(id="s32", kind="doc", t=126.30, d=5.70, src="doc_p04.jpg", tag=FILING,
          cam=[(0.0, 780, 990, 1.05), (5.7, 775, 995, 1.09)],

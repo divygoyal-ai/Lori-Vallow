@@ -136,16 +136,13 @@ CLIPS = {
     # AI shots: the producer's original generations (720x1280), all faceless / from behind ...
     "ai_garden_kids.mp4": (AIV("m3_tCrF.mp4"), 0.3, 3.72, UP, "ai", 1.0),
     "ai_boy_floor.mp4": (AIV("m6_Lw3h.mp4"), 0.0, 3.62, UP, "ai", 0.77),  # ends before he turns his head
-    "ai_planet.mp4": (AIV("m5_EbgV.mp4"), 0.0, 4.8, UP, "ai", 1.0),
     "ai_writer_desk.mp4": (AIV("m4_5jy8.mp4"), 0.0, 7.7, UP, "ai", 1.0),
     # ... and new Magnific generations (Nano Banana 2 reference -> Kling 3.0), no faces anywhere
     "ai_party.mp4": (GEN("v_party_clean.mp4"), 0.0, 4.0, UP, "ai", 0.94),  # Kling 2.5, first second dropped (a guest faced camera), one background head softened
-    "ai_family_walk.mp4": (GEN("v_walk.mp4"), 0.3, 2.05, UP, "ai", 0.7),  # Kling 2.5, slow motion, all from behind
-    "ai_family_tv.mp4": (GEN("v_family_tv2_clean.mp4"), 0.2, 3.65, KL, "ai", 1.0),  # TV screen softened (no AI text)
+    "ai_family_hug.mp4": (GEN("v_porch.mp4"), 0.2, 2.0, UP, "ai", 0.72),  # Kling 2.5, slow motion: all four on the porch, from behind
     "ai_calendar.mp4": (GEN("v_calendar.mp4"), 0.0, 2.9, KL, "ai", 1.0),
     "ai_watching.mp4": (GEN("v_watching.mp4"), 0.0, 4.7, KL, "ai", 1.0),
     "ai_family_court.mp4": (GEN("v_court.mp4"), 0.0, 2.8, KL, "ai", 1.0),
-    "ai_writing.mp4": (GEN("v_writing.mp4"), 0.5, 4.2, KL, "ai", 1.0),
     # Chandler PD interview with Lori, Jul 11 2019 -> the two landscape cards
     "real_int_1.mp4": (B05, 1194.5, 1198.3, WIDE, "interview", 1.0),
     "real_int_3.mp4": (B05, 1993.0, 1998.0, WIDE, "interview", 1.0),
@@ -190,6 +187,10 @@ def images():
     for n in ["chandler_aerial.jpg"]:
         src = os.path.join(im, n)
         ff("-i", src, "-vf", graded(["-i", src], "scale=-2:2200:flags=lanczos", "place"), "-q:v", "1", img(n))
+    # AI stills (pre-scaled to 1080x1920 in gen/): family watching TV (screen softened), the world
+    # ending (Nano Banana 2, understated), and the "I will..." note from the draft
+    for n, out in [("family_tv_still.png", "ai_family_tv.jpg"), ("world_end_1080.png", "ai_world.jpg"), ("i_will.png", "ai_i_will.jpg")]:
+        still(["-i", GEN(n)], out, "null", "ai")
     # booking photo -> polaroid print (+ blurred backdrop); family photos -> full-screen stills
     src = ["-i", os.path.join(im, "mug_lori_kauai.jpg")]
     crop = "crop=440:557:172:4,scale=648:820:flags=lanczos"
