@@ -32,24 +32,27 @@ def ff(*args):
     subprocess.run(["ffmpeg", "-loglevel", "error", "-y", *args], check=True)
 
 
-# v3 grade, matched to the producer's reference frame (the AI laptop shot): low-key, deep crushed
-# blacks, warm lamp-coloured highlights, muted colour, no added grain. Every clip gets the same look;
-# only its exposure (gamma) and saturation are solved per clip so it lands on the reference's
-# brightness and colour density, whatever the source looked like.
-CURVE = "curves=all='0/0 0.1/0.03 0.3/0.15 0.6/0.44 0.85/0.74 1/0.88'"
+# v4 grade: the same dark, warm, low-key true-crime look as v3 (deep blacks, warm lamp-coloured
+# highlights, muted colour, no added grain) but lifted after producer feedback that v3 was blacked
+# out: a gentler toe keeps shadow detail and every clip is solved to a brighter target, so faces,
+# rooms and objects always read. Only exposure (gamma) and saturation are solved per clip.
+CURVE = "curves=all='0/0 0.08/0.045 0.3/0.21 0.6/0.5 0.85/0.8 1/0.93'"
 WARM = "colorbalance=rs=0.01:bs=-0.012:rm=0.012:bm=-0.02:rh=0.045:gh=0.012:bh=-0.05"
-VIG = "vignette=angle=PI/4.4"
-# (target mean luma, target mean saturation). Reference frame: luma 0.06-0.09, saturation 0.21.
+VIG = "vignette=angle=PI/5"
+# documents keep the v2 paper look the producer liked: warm, slightly dim paper on a dark desk
+DOCLOOK = ("eq=contrast=1.1:saturation=0.3,curves=all='0/0 0.1/0.03 0.5/0.44 1/0.82',"
+           "colorbalance=rh=0.04:gh=0.02:bh=-0.03,vignette=angle=PI/3.8")
+# (target mean luma, target mean saturation)
 TARGET = {
-    "ai": (0.085, 0.27),  # AI shots: stay right on the reference
-    "day": (0.07, 0.18),  # the daylight house shot: pushed down to a dim, desaturated late-day look
-    "real": (0.12, 0.26),  # draft-sourced real footage on portrait cards
-    "night": (0.16, 0.26),  # night bodycam cards: lifted enough to read faces, blacks still crushed
-    "interview": (0.17, 0.26),  # interview-room cards  # bodycam / interview / draft real footage (inside cards, over a dark backdrop)
-    "photo": (0.2, 0.3),  # family photos / booking photo (shown on a polaroid print)
-    "place": (0.10, 0.26),  # CC location photos, full frame
-    "doc": (0.26, 0.18),  # court filing paper on the dark desk
-    "bgblur": (0.05, 0.22),  # blurred backdrops behind cards
+    "ai": (0.14, 0.3),  # AI shots
+    "day": (0.13, 0.24),  # the daylight house shot at dusk
+    "real": (0.19, 0.28),  # real footage from the draft
+    "night": (0.19, 0.28),  # night bodycam, full-frame vertical
+    "interview": (0.21, 0.28),  # interview room
+    "photo": (0.24, 0.32),  # family photos / booking photo
+    "place": (0.16, 0.28),  # CC location photos, full frame
+    "doc": (0.38, None),  # court filing paper on the dark desk (v2 look)
+    "bgblur": (0.07, 0.24),  # blurred backdrops behind the two landscape cards / polaroid
 }
 
 
@@ -63,6 +66,13 @@ def _stats(args, vf):
 
 def graded(args, pre, g):
     ty, ts = TARGET[g]
+    if g == "doc":
+        lo, hi = 0.3, 4.0
+        for _ in range(9):
+            mid = (lo * hi) ** 0.5
+            y, _s = _stats(args, f"{pre},eq=gamma={mid:.3f},{DOCLOOK}")
+            lo, hi = (mid, hi) if y < ty else (lo, mid)
+        return f"{pre},eq=gamma={(lo * hi) ** 0.5:.3f},{DOCLOOK}"
     extra = ",gblur=sigma=40" if g == "bgblur" else ""
     # measure on small frames: the look is per-pixel, so upscaling / sharpening / blur can be skipped here
     drop = ("scale=", "unsharp=", "gblur=") + (("crop=",) if g == "bgblur" else ())
@@ -105,58 +115,69 @@ def still(args, out, vf, g):
 
 AIDIR = os.path.join(SRC, "ai")
 AIV = lambda n: os.path.join(AIDIR, n)
-B03 = V("03_charles_locked_out.mp4")  # Chandler PD bodycam, Jan 31 2019
+GEN = lambda n: os.path.join(SRC, "gen", n)  # Magnific: Nano Banana 2 reference image -> Kling 3.0 video
 B05 = V("05_lori_interview.mp4")  # Chandler PD interview room, Jul 11 2019
-CARD = "crop=1104:621:176:0,unsharp=3:3:0.3"  # full 16:9 bodycam frame at native res, minus the re-uploader's corner bug
-WIDE = "unsharp=3:3:0.3"  # interview room, full 1280x720 frame
-PORTRAIT = "scale=1080:1920:flags=lanczos"  # draft real footage, shown as a portrait card
+WIDE = "unsharp=3:3:0.3"  # interview room, full 1280x720 frame (the only landscape shots, ~4% of the runtime)
+KL = "scale=1080:1920:flags=lanczos"  # Kling 3.0 output (1080x1916) -> 1080x1920
+
+
+def real_v(name):
+    # Real footage, cut as a face-centred 9:16 crop (upin/, see crop list in docs) and upscaled to
+    # 1080x1920 with Magnific Precision (upout/). Falls back to a plain lanczos upscale of the crop.
+    up = os.path.join(SRC, "upout", name + ".mp4")
+    if os.path.exists(up):
+        return up, "scale=1080:1920:flags=lanczos"
+    return os.path.join(SRC, "upin", name + ".mp4"), "scale=1080:1920:flags=lanczos,unsharp=5:5:0.5"
+
 
 # (source, t0, t1, filter, grade, rate) -> every clip is baked to exactly the length it plays for
 CLIPS = {
-    # AI shots: the producer's original generations (720x1280) ...
+    # AI shots: the producer's original generations (720x1280), all faceless / from behind ...
     "ai_garden_kids.mp4": (AIV("m3_tCrF.mp4"), 0.3, 3.72, UP, "ai", 1.0),
     "ai_boy_floor.mp4": (AIV("m6_Lw3h.mp4"), 0.0, 3.62, UP, "ai", 0.77),  # ends before he turns his head
     "ai_planet.mp4": (AIV("m5_EbgV.mp4"), 0.0, 4.8, UP, "ai", 1.0),
     "ai_writer_desk.mp4": (AIV("m4_5jy8.mp4"), 0.0, 9.7, UP, "ai", 1.0),
-    "ai_watching.mp4": (AIV("m2_ks9w.mp4"), 0.0, 2.6, UP, "ai", 0.55),  # before the woman's face turns to camera
-    "ai_family_court.mp4": (AIV("m1_s7Z4.mp4"), 0.0, 2.8, UP, "ai", 1.0),
-    # ... and the four with no original, from the clean draft picture (1080x1920)
-    "ai_house_back.mp4": (DRAFT, 141.9, 144.5, "null", "day", 0.93),
-    "ai_laptop.mp4": (DRAFT, 11.0, 12.0, "null", "ai", 0.69),
-    "ai_calendar.mp4": (DRAFT, 64.8, 67.7, "null", "ai", 1.0),
-    "ai_writing.mp4": (DRAFT, 126.9, 130.6, "null", "ai", 1.0),
-    # real footage from the draft (already 9:16) -> portrait cards
-    "real_charles_day.mp4": (DRAFT, 135.0, 136.0, PORTRAIT, "real", 0.45),
-    "real_lori_car.mp4": (DRAFT, 42.1, 46.4, PORTRAIT, "real", 1.0),
-    # Charles in his cap in the garage: real Chandler PD footage (screen-recorded; the crop drops the cursor)
-    "real_charles_cap.mp4": (DRAFT, 113.0, 116.3, "crop=950:1689:0:115,scale=1080:1920:flags=lanczos", "real", 1.0),
-    # Chandler PD bodycam, Jan 31 2019 -> 16:9 cards at native resolution
-    "real_night_a.mp4": (B03, 39.5, 44.15, CARD, "night", 1.0),
-    "real_night_b.mp4": (B03, 89.0, 91.2, CARD, "night", 1.0),
-    "real_night_c.mp4": (B03, 631.5, 635.1, CARD, "night", 1.0),
-    "real_to_door.mp4": (B03, 621.3, 624.4, CARD, "night", 1.0),
-    "real_night_face.mp4": (B03, 638.0, 641.05, CARD, "night", 1.0),
-    "real_bodycam_walk.mp4": (B03, 7.8, 12.2, CARD, "night", 1.0),
-    "real_gate.mp4": (B03, 788.5, 790.7, CARD, "night", 1.0),
-    "real_charles_close.mp4": (B03, 1019.8, 1022.5, CARD, "night", 1.0),
-    "real_walkaway.mp4": (B03, 583.0, 587.6, CARD, "night", 1.0),
-    # Chandler PD interview with Lori, Jul 11 2019 -> 16:9 cards
+    # ... and new Magnific generations (Nano Banana 2 reference -> Kling 3.0), no faces anywhere
+    "ai_house_back.mp4": (GEN("v_house.mp4"), 0.0, 4.25, KL, "day", 1.0),
+    "ai_family_tv.mp4": (GEN("v_family_tv2_clean.mp4"), 0.2, 2.7, KL, "ai", 1.0),  # TV screen softened (no AI text)
+    "ai_calendar.mp4": (GEN("v_calendar.mp4"), 0.0, 2.9, KL, "ai", 1.0),
+    "ai_watching.mp4": (GEN("v_watching.mp4"), 0.0, 4.7, KL, "ai", 1.0),
+    "ai_family_court.mp4": (GEN("v_court.mp4"), 0.0, 2.8, KL, "ai", 1.0),
+    "ai_writing.mp4": (GEN("v_writing.mp4"), 0.5, 4.2, KL, "ai", 1.0),
+    # Chandler PD interview with Lori, Jul 11 2019 -> the two landscape cards
     "real_int_1.mp4": (B05, 1194.5, 1198.3, WIDE, "interview", 1.0),
-    "real_int_2.mp4": (B05, 799.5, 803.4, WIDE, "interview", 1.0),
     "real_int_3.mp4": (B05, 1995.0, 1998.0, WIDE, "interview", 1.0),
+}
+# real footage, full-screen vertical: (crop name, seconds used, grade, rate)
+REAL_V = {
+    "real_charles_day.mp4": ("charles_day", 1.0, "real", 0.45),  # draft: Chandler PD bodycam, daylight
+    "real_lori_car.mp4": ("lori_car", 4.3, "real", 1.0),
+    "real_charles_cap.mp4": ("charles_cap", 3.3, "real", 1.0),  # Charles in his cap in the garage (cursor cropped out)
+    "real_night_a.mp4": ("night_a", 4.65, "night", 1.0),  # Chandler PD bodycam, Jan 31 2019
+    "real_night_b.mp4": ("night_b", 2.2, "night", 1.0),
+    "real_night_c.mp4": ("night_c", 3.6, "night", 1.0),
+    "real_to_door.mp4": ("to_door", 3.1, "night", 1.0),
+    "real_night_face.mp4": ("night_face", 3.05, "night", 1.0),
+    "real_bodycam_walk.mp4": ("bodycam_walk", 4.4, "night", 1.0),
+    "real_gate.mp4": ("gate", 2.2, "night", 1.0),
+    "real_charles_close.mp4": ("charles_close", 2.7, "night", 1.0),
+    "real_walkaway.mp4": ("walkaway", 4.6, "night", 1.0),
+    "real_int_2.mp4": ("int_2", 3.9, "interview", 1.0),
 }
 BG = "scale=-2:1920,crop=1080:1920"
 
 
 def video():
     for out, (src, t0, t1, vf, g, rate) in CLIPS.items():
-        mode = "blend" if src in (B03, B05) else "mci"
-        clip(src, t0, t1, out, vf, g, rate, mode)
-        if out.startswith("real_"):  # blurred, darkened full-frame backdrop behind every card
-            clip(src, t0, t1, out.replace(".mp4", "_bg.mp4"), BG if vf != PORTRAIT and not vf.startswith("crop=950") else "scale=1080:1920",
-                 "bgblur", rate, "blend")
+        clip(src, t0, t1, out, vf, g, rate, "blend" if src == B05 else "mci")
+        if src == B05:  # blurred, darkened full-frame backdrop behind the two landscape cards
+            clip(src, t0, t1, out.replace(".mp4", "_bg.mp4"), BG, "bgblur", rate, "blend")
+    for out, (name, dur, g, rate) in REAL_V.items():
+        src, vf = real_v(name)
+        clip(src, 0, dur, out, vf, g, rate, "mci" if name == "charles_day" else "blend")
     # freeze of Charles at the end of his daylight clip (the push carries on to his face)
-    still(["-ss", "135.95", "-i", DRAFT], "charles_day_face.jpg", PORTRAIT, "real")
+    src, vf = real_v("charles_day")
+    still(["-ss", "0.95", "-i", src], "charles_day_face.jpg", vf, "real")
 
 
 def images():
@@ -168,19 +189,18 @@ def images():
     for n in ["chandler_aerial.jpg", "gilbert.jpg", "maricopa_court.jpg"]:
         src = os.path.join(im, n)
         ff("-i", src, "-vf", graded(["-i", src], "scale=-2:2200:flags=lanczos", "place"), "-q:v", "1", img(n))
-    # AI: the family on the couch, Charles bald and heavyset, everyone from behind (producer's image)
-    src = os.path.join(AIDIR, "chatgpt_img.png")
-    ff("-i", src, "-vf", graded(["-i", src], "scale=1080:1920:flags=lanczos,unsharp=5:5:0.4", "ai"), "-q:v", "1", img("ai_family_tv.jpg"))
-    # real photos -> polaroids (cropped to the print's 648:820 aspect) + blurred backdrops
+    # booking photo -> polaroid print (+ blurred backdrop); family photos -> full-screen stills
+    src = ["-i", os.path.join(im, "mug_lori_kauai.jpg")]
+    crop = "crop=440:557:172:4,scale=648:820:flags=lanczos"
+    still(src, "lori_booking.jpg", crop, "photo")
+    still(src, "lori_booking_bg.jpg", f"{crop},scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920", "bgblur")
     photos = {
-        "lori_booking.jpg": (["-i", os.path.join(im, "mug_lori_kauai.jpg")], "crop=440:557:172:4,scale=648:820:flags=lanczos"),
-        "photo_wedding.jpg": (["-ss", "138.3", "-i", DRAFT], "crop=1080:1367:0:250"),
-        "photo_charles_baby.jpg": (["-ss", "134.2", "-i", DRAFT], "crop=830:1050:250:185"),  # baby kept out of frame
-        "photo_charles.jpg": (["-ss", "133.2", "-i", DRAFT], "crop=1080:1367:0:150"),
+        "photo_wedding.jpg": (["-ss", "138.3", "-i", DRAFT], "null"),
+        "photo_charles_baby.jpg": (["-ss", "134.2", "-i", DRAFT], "crop=590:1050:380:185,scale=1080:1920:flags=lanczos"),  # baby out of frame
+        "photo_charles.jpg": (["-ss", "133.2", "-i", DRAFT], "null"),
     }
     for out, (args, crop) in photos.items():
         still(args, out, crop, "photo")
-        still(args, out.replace(".jpg", "_bg.jpg"), f"{crop},scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920", "bgblur")
 
 
 def audio():
@@ -243,6 +263,13 @@ def sfx():
     n = int(0.55 * SR)
     env = np.minimum(1, t(0.55) / 0.03) * np.exp(-np.maximum(0, t(0.55) - 0.4) / 0.05)
     save("marker.wav", bandnoise(n, 1800, 7000) * env * (0.7 + 0.3 * np.sin(t(0.55) * 2 * np.pi * 38)))
+    # pencil: one soft graphite underline stroke - quiet, papery, no squeak (replaces the marker)
+    n = int(0.5 * SR)
+    tt = t(0.5)
+    env = np.minimum(1, tt / 0.06) * np.exp(-np.maximum(0, tt - 0.32) / 0.06)
+    grain = 0.55 + 0.45 * np.abs(bandnoise(n, 20, 90)) / 0.02
+    x = bandnoise(n, 1200, 4200) * env * np.clip(grain, 0, 1.4) + bandnoise(n, 250, 900) * env * 0.35
+    save("pencil.wav", reverb(x, 0.25, 0.15)[:n])
     # pen writing: ~3.4s of short scratchy strokes
     n = int(3.4 * SR)
     x = np.zeros(n)

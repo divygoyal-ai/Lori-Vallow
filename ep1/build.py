@@ -37,22 +37,24 @@ BODYCAM_JAN = ("BODYCAM", "CHANDLER POLICE · JAN 31, 2019")
 INTERVIEW = ("POLICE INTERVIEW", "CHANDLER POLICE · JUL 11, 2019")
 FILING = ("COURT FILING", "MARICOPA COUNTY · FEB 2019")
 SHOTS = [
-    # --- cold open: meet Charles (real bodycam; the push carries on through a freeze to his face)
-    dict(id="s01", kind="pcard", t=0.00, d=4.55, src="real_charles_day.mp4", dv=2.22, still="charles_day_face.jpg",
-         kb=(1.0, 1.22, 0, 0), origin="42% 14%", tag=("BODYCAM", "CHANDLER POLICE · 2019")),
+    # --- cold open: meet Charles (real bodycam, full screen; the push carries on through a freeze to his face)
+    dict(id="s01v", kind="video", t=0.00, d=2.22, src="real_charles_day.mp4", grp="s01", kb=(1.0, 1.22, 0, 0), origin="42% 16%",
+         tag=("BODYCAM", "CHANDLER POLICE · 2019")),
+    dict(id="s01i", kind="image", t=2.22, d=2.33, src="charles_day_face.jpg", grp="s01", kb=(1.0, 1.22, 0, 0), origin="42% 16%"),
     dict(id="s02", kind="image", t=4.55, d=3.60, src="chandler_aerial.jpg", kb=(1.18, 1.3, -6, 6)),
-    dict(id="s03", kind="video", t=8.15, d=2.80, src="ai_house_back.mp4", kb=(1.0, 1.07, 0, 0), ai="REENACTMENT"),
-    dict(id="s04", kind="video", t=10.95, d=1.45, src="ai_laptop.mp4", kb=(1.05, 1.1, 0, 0), ai="REENACTMENT"),
-    dict(id="s05", kind="image", t=12.40, d=2.50, src="ai_family_tv.jpg", kb=(1.0, 1.08, 0, 0), origin="30% 40%", ai="REENACTMENT"),
+    dict(id="s03", kind="video", t=8.15, d=4.25, src="ai_house_back.mp4", kb=(1.0, 1.06, 0, 0), ai="REENACTMENT"),
+    dict(id="s05", kind="video", t=12.40, d=2.50, src="ai_family_tv.mp4", kb=(1.0, 1.05, 0, 0), origin="30% 50%", ai="REENACTMENT"),
     # --- Lori (real) and the kids (never faces)
-    dict(id="s06", kind="polaroid", t=14.90, d=2.08, src="photo_wedding.jpg", label="CHARLES & LORI", tag=("FAMILY PHOTO", "VALLOW FAMILY")),
+    dict(id="s06", kind="image", t=14.90, d=2.08, src="photo_wedding.jpg", kb=(1.0, 1.1, 0, 0), origin="50% 30%",
+         tag=("FAMILY PHOTO", "CHARLES & LORI VALLOW")),
     dict(id="s07", kind="video", t=16.98, d=3.42, src="ai_garden_kids.mp4", kb=(1.0, 1.06, 0, 0), ai="REENACTMENT"),
     dict(id="s08", kind="video", t=20.40, d=4.70, src="ai_boy_floor.mp4", kb=(1.0, 1.08, 0, 0), ai="REENACTMENT"),
-    dict(id="s09", kind="polaroid", t=25.10, d=3.40, src="photo_charles_baby.jpg", label="CHARLES VALLOW", tag=("FAMILY PHOTO", "VALLOW FAMILY")),
+    dict(id="s09", kind="image", t=25.10, d=3.40, src="photo_charles_baby.jpg", kb=(1.0, 1.12, 0, 0), origin="50% 30%",
+         tag=("FAMILY PHOTO", "CHARLES VALLOW")),
     dict(id="s10", kind="image", t=28.50, d=3.45, src="gilbert.jpg", kb=(1.12, 1.2, 4, -4)),
     # --- the turn: Charles is terrified (real bodycam, Jan 31 2019)
-    dict(id="s11", kind="card", t=31.95, d=4.65, src="real_night_a.mp4", kb=(1.0, 1.14, 0, 0), origin="48% 30%", tag=BODYCAM_JAN),
-    dict(id="s12", kind="pcard", t=36.60, d=4.30, src="real_lori_car.mp4", kb=(1.0, 1.1, 0, 0), origin="55% 25%",
+    dict(id="s11", kind="video", t=31.95, d=4.65, src="real_night_a.mp4", kb=(1.0, 1.1, 0, 0), origin=FACE, tag=BODYCAM_JAN),
+    dict(id="s12", kind="video", t=36.60, d=4.30, src="real_lori_car.mp4", kb=(1.0, 1.1, 0, 0), origin="55% 25%",
          tag=("BODYCAM", "ARIZONA POLICE · 2019")),
     dict(id="s13", kind="card", t=40.90, d=3.80, src="real_int_1.mp4", kb=(1.0, 1.25, 0, 0), origin="27% 55%", tag=INTERVIEW),
     dict(id="s14", kind="polaroid", t=44.70, d=4.20, src="lori_booking.jpg", label="LORI VALLOW", tag=("BOOKING PHOTO", "KAUAI POLICE · 2020")),
@@ -69,13 +71,13 @@ SHOTS = [
     dict(id="s18b", kind="doc", t=70.30, d=3.10, src="doc_p04.jpg", tag=FILING,
          cam=[(0.0, 600, 1070, 1.3), (3.1, 610, 1070, 1.38)],
          hl=[(0.75, 312, 1052, 572, 42)]),
-    dict(id="s19", kind="card", t=73.40, d=3.90, src="real_int_2.mp4", kb=(1.05, 1.3, 0, 0), origin="27% 55%", tag=INTERVIEW),
+    dict(id="s19", kind="video", t=73.40, d=3.90, src="real_int_2.mp4", kb=(1.0, 1.1, 0, 0), origin="50% 50%", tag=INTERVIEW),
     # --- "he is not Charles anymore"
-    dict(id="s20", kind="card", t=77.30, d=3.60, src="real_night_c.mp4", kb=(1.0, 1.15, 0, 0), origin="49% 25%", tag=BODYCAM_JAN),
-    dict(id="s21", kind="pcard", t=80.90, d=3.30, src="real_charles_cap.mp4", kb=(1.0, 1.08, 0, 0), origin="40% 20%",
+    dict(id="s20", kind="video", t=77.30, d=3.60, src="real_night_c.mp4", kb=(1.0, 1.1, 0, 0), origin="55% 30%", tag=BODYCAM_JAN),
+    dict(id="s21", kind="video", t=80.90, d=3.30, src="real_charles_cap.mp4", kb=(1.0, 1.08, 0, 0), origin="40% 20%",
          tag=("BODYCAM", "CHANDLER POLICE · 2019")),
-    dict(id="s22", kind="card", t=84.20, d=3.10, src="real_to_door.mp4", kb=(1.0, 1.12, 0, 0), origin="57% 30%", tag=BODYCAM_JAN),
-    dict(id="s23", kind="card", t=87.30, d=3.05, src="real_night_face.mp4", kb=(1.05, 1.45, 0, 0), origin="72% 40%", tag=BODYCAM_JAN),
+    dict(id="s22", kind="video", t=84.20, d=3.10, src="real_to_door.mp4", kb=(1.0, 1.08, 0, 0), origin=FACE, tag=BODYCAM_JAN),
+    dict(id="s23", kind="video", t=87.30, d=3.05, src="real_night_face.mp4", kb=(1.0, 1.3, 0, 0), origin="50% 38%", tag=BODYCAM_JAN),
     dict(id="s24", kind="doc", t=90.35, d=4.55, src="doc_p04.jpg", tag=FILING,
          cam=[(0.0, 770, 900, 1.0), (4.55, 770, 905, 1.08)],
          hl=[(2.0, 1201, 829, 76, 40), (2.15, 264, 889, 134, 40), (2.75, 851, 940, 424, 40), (2.95, 266, 999, 98, 40)]),
@@ -83,8 +85,8 @@ SHOTS = [
     dict(id="s25", kind="video", t=94.90, d=9.70, src="ai_writer_desk.mp4", kb=(1.0, 1.12, 0, 0), ai="REENACTMENT"),
     dict(id="s26", kind="card", t=104.60, d=3.00, src="real_int_3.mp4", kb=(1.2, 1.4, 0, 0), origin="27% 55%", tag=INTERVIEW),
     # --- Charles acts
-    dict(id="s27", kind="video", t=107.60, d=4.70, src="ai_watching.mp4", kb=(1.0, 1.07, 0, 0), origin="30% 30%", ai="REENACTMENT"),
-    dict(id="s28", kind="card", t=112.30, d=4.40, src="real_bodycam_walk.mp4", kb=(1.0, 1.08, 0, 0), origin="41% 40%", tag=BODYCAM_JAN),
+    dict(id="s27", kind="video", t=107.60, d=4.70, src="ai_watching.mp4", kb=(1.0, 1.05, 0, 0), ai="REENACTMENT"),
+    dict(id="s28", kind="video", t=112.30, d=4.40, src="real_bodycam_walk.mp4", kb=(1.0, 1.06, 0, 0), tag=BODYCAM_JAN),
     dict(id="s29", kind="video", t=116.70, d=2.80, src="ai_family_court.mp4", kb=(1.0, 1.06, 0, 0), ai="REENACTMENT"),
     dict(id="s30", kind="doc", t=119.50, d=3.10, src="doc_p01.jpg", tag=("COURT FILING", "MARICOPA COUNTY SUPERIOR COURT"),
          cam=[(0.0, 560, 820, 1.2), (3.1, 580, 830, 1.3)],
@@ -94,13 +96,14 @@ SHOTS = [
     dict(id="s32", kind="doc", t=126.30, d=5.70, src="doc_p04.jpg", tag=FILING,
          cam=[(0.0, 780, 990, 1.05), (5.7, 775, 995, 1.09)],
          hl=[(0.3, 800, 993, 478, 40), (2.2, 756, 940, 520, 40), (2.45, 266, 999, 98, 40)]),
-    dict(id="s33", kind="card", t=132.00, d=2.20, src="real_gate.mp4", kb=(1.0, 1.06, 0, 0), origin="71% 40%", tag=BODYCAM_JAN),
-    dict(id="s34", kind="card", t=134.20, d=2.20, src="real_night_b.mp4", kb=(1.0, 1.1, 0, 0), origin="49% 25%", tag=BODYCAM_JAN),
+    dict(id="s33", kind="video", t=132.00, d=2.20, src="real_gate.mp4", kb=(1.0, 1.05, 0, 0), tag=BODYCAM_JAN),
+    dict(id="s34", kind="video", t=134.20, d=2.20, src="real_night_b.mp4", kb=(1.0, 1.08, 0, 0), origin=FACE, tag=BODYCAM_JAN),
     dict(id="s35", kind="image", t=136.40, d=4.50, src="maricopa_court.jpg", kb=(1.1, 1.2, -5, 5),
          loc=("MARICOPA COUNTY SUPERIOR COURT", "PHOENIX, ARIZONA")),
-    dict(id="s36", kind="polaroid", t=140.90, d=2.20, src="photo_charles.jpg", label="CHARLES VALLOW", tag=("FAMILY PHOTO", "VALLOW FAMILY")),
-    dict(id="s37", kind="card", t=143.10, d=2.70, src="real_charles_close.mp4", kb=(1.0, 1.12, 0, 0), origin="18% 35%", tag=BODYCAM_JAN),
-    dict(id="s38", kind="card", t=145.80, d=4.60, src="real_walkaway.mp4", kb=(1.06, 1.0, 0, 0), origin="25% 40%", veil=0.6, tag=BODYCAM_JAN),
+    dict(id="s36", kind="image", t=140.90, d=2.20, src="photo_charles.jpg", kb=(1.0, 1.1, 0, 0), origin="50% 30%",
+         tag=("FAMILY PHOTO", "CHARLES VALLOW")),
+    dict(id="s37", kind="video", t=143.10, d=2.70, src="real_charles_close.mp4", kb=(1.0, 1.1, 0, 0), origin="50% 35%", tag=BODYCAM_JAN),
+    dict(id="s38", kind="video", t=145.80, d=4.60, src="real_walkaway.mp4", kb=(1.05, 1.0, 0, 0), veil=0.6, tag=BODYCAM_JAN),
 ]
 
 CUT_TO_BLACK = 150.40
@@ -117,7 +120,7 @@ def hit(peak_time, peak_offset):  # start so the file's peak lands on peak_time
 # Loudness calibration. Integrated LUFS of each file (measured with ebur128) and the loudness each
 # class of effect should sit at in the mix. The VO is -16 LUFS: impacts are felt, never on top of words.
 SFX_LUFS = {"impact-bass-1.mp3": -6.5, "impact-bass-2.mp3": -4.5, "whoosh-cinematic.mp3": -14.1, "whoosh-short.mp3": -15.2,
-            "glitch-3.mp3": -22.3, "heartbeat.wav": -17.9, "marker.wav": -10.0, "paper.wav": -14.8, "pen_writing.wav": -13.5,
+            "glitch-3.mp3": -22.3, "heartbeat.wav": -17.9, "marker.wav": -10.0, "pencil.wav": -9.6, "paper.wav": -14.8, "pen_writing.wav": -13.5,
             "radio_squelch.wav": -9.8, "siren_distant.wav": -8.6, "sub_drop.wav": -15.2}
 
 
@@ -133,32 +136,33 @@ def fx(aid, f, start, target):
 
 
 HIT, SOFT_HIT, KEY_HIT = -21, -24, -18.5
+PENCIL = -35  # soft graphite stroke under each underline: felt, not heard over the VO
 SFX = [
     fx("x_title", "impact-bass-1.mp3", hit(0.35, 0.10), HIT),
     fx("x_turn", "impact-bass-2.mp3", hit(31.95, 1.83), KEY_HIT),
     fx("x_lori", "impact-bass-1.mp3", hit(44.70, 0.10), SOFT_HIT),
     fx("x_paper1", "paper.wav", 48.85, -26),
-    fx("x_mk1", "marker.wav", 48.90 + 1.45, -27),
-    fx("x_mk2", "marker.wav", 48.90 + 4.85, -27),
-    fx("x_mk3", "marker.wav", 48.90 + 8.95, -27),
+    fx("x_pc1", "pencil.wav", 48.90 + 1.45, PENCIL),
+    fx("x_pc2", "pencil.wav", 48.90 + 4.85, PENCIL),
+    fx("x_pc3", "pencil.wav", 48.90 + 8.95, PENCIL),
     fx("x_planet", "impact-bass-2.mp3", hit(60.10, 1.83), SOFT_HIT),
     fx("x_paper2", "paper.wav", 67.75, -27),
-    fx("x_mk4", "marker.wav", 67.80 + 0.9, -27),
-    fx("x_mk5", "marker.wav", 70.30 + 0.75, -27),
+    fx("x_pc4", "pencil.wav", 67.80 + 0.9, PENCIL),
+    fx("x_pc5", "pencil.wav", 70.30 + 0.75, PENCIL),
     fx("x_notch", "impact-bass-1.mp3", hit(77.30, 0.10), HIT),
     fx("x_hb1", "heartbeat.wav", 85.10, -24),
     fx("x_hb2", "heartbeat.wav", 86.30, -25),
     fx("x_face", "impact-bass-2.mp3", hit(89.06, 1.83), SOFT_HIT),
     fx("x_paper3", "paper.wav", 90.30, -27),
-    fx("x_mk6", "marker.wav", 90.35 + 2.0, -27),
-    fx("x_mk7", "marker.wav", 90.35 + 2.75, -27),
+    fx("x_pc6", "pencil.wav", 90.35 + 2.0, PENCIL),
+    fx("x_pc7", "pencil.wav", 90.35 + 2.75, PENCIL),
     fx("x_siren", "siren_distant.wav", 111.95, -31),
     fx("x_radio", "radio_squelch.wav", 112.35, -26),
     fx("x_divorce", "impact-bass-1.mp3", hit(116.72, 0.10), SOFT_HIT),
     fx("x_paper4", "paper.wav", 119.45, -27),
     fx("x_kill", "impact-bass-2.mp3", hit(126.34, 1.83), KEY_HIT),
-    fx("x_mk8", "marker.wav", 126.30 + 0.3, -27),
-    fx("x_mk9", "marker.wav", 126.30 + 2.2, -27),
+    fx("x_pc8", "pencil.wav", 126.30 + 0.3, PENCIL),
+    fx("x_pc9", "pencil.wav", 126.30 + 2.2, PENCIL),
     fx("x_hb3", "heartbeat.wav", 132.15, -23),
     fx("x_hb4", "heartbeat.wav", 133.35, -24),
     fx("x_black", "impact-bass-2.mp3", hit(CUT_TO_BLACK, 1.83), -17),
@@ -201,10 +205,17 @@ def build():
                       f'data-track-index="{track}" muted playsinline></video>')
             else:
                 el = f'<img id="{sid}" class="clip media" src="assets/img/{s["src"]}" {timing} data-track-index="{track}" alt="" />'
-            body.append(f'<div id="{sid}-w" class="shotw">{el}</div>')
-            kb, org = s["kb"], s.get("origin", "50% 50%")
-            js.append(f'tl.fromTo("#{sid}-w", {{scale:{kb[0]}, xPercent:{kb[2]}, transformOrigin:"{org}"}}, '
-                      f'{{scale:{kb[1]}, xPercent:{kb[3]}, duration:{d:.2f}, ease:"none"}}, {t:.2f});')
+            grp = s.get("grp", sid)
+            members = [x for x in SHOTS if x.get("grp", x["id"]) == grp]
+            if s is members[0]:  # one wrapper (and one continuous push) per group
+                gt, gd = t, members[-1]["t"] + members[-1]["d"] - t
+                body.append(f'<div id="{grp}-w" class="shotw">{el}</div>')
+                kb, org = s["kb"], s.get("origin", "50% 50%")
+                js.append(f'tl.fromTo("#{grp}-w", {{scale:{kb[0]}, xPercent:{kb[2]}, transformOrigin:"{org}"}}, '
+                          f'{{scale:{kb[1]}, xPercent:{kb[3]}, duration:{gd:.2f}, ease:"none"}}, {gt:.2f});')
+            else:  # later member: add its media inside the group's wrapper
+                idx = max(j for j, b in enumerate(body) if b.startswith(f'<div id="{grp}-w"'))
+                body[idx] = body[idx][: -len("</div>")] + el + "</div>"
         elif k in ("card", "pcard"):
             g = CARD if k == "card" else PCARD
             bg = s["src"].replace(".mp4", "_bg.mp4")
@@ -267,7 +278,7 @@ def build():
             js.append(f'tl.fromTo("#{sid}-veil", {{opacity:0}}, {{opacity:{s["veil"]}, duration:{d * 0.85:.2f}, ease:"power1.in"}}, {t + d * 0.15:.2f});')
         if s.get("ai"):
             body.append(ai_html(sid, t, d, s["ai"]))
-        if s.get("tag") and k in ("doc", "polaroid"):
+        if s.get("tag") and k in ("doc", "polaroid", "video", "image"):
             body.append(tag_html(sid, t, d, *s["tag"]))
             js.append(f'tl.fromTo("#{sid}-tag .srctag", {{opacity:0, x:-14}}, {{opacity:1, x:0, duration:0.3, ease:"power2.out"}}, {t + 0.25:.2f});')
         if s.get("loc"):
