@@ -42,12 +42,14 @@ VIG = "vignette=angle=PI/4.4"
 # (target mean luma, target mean saturation). Reference frame: luma 0.06-0.09, saturation 0.21.
 TARGET = {
     "ai": (0.085, 0.27),  # AI shots: stay right on the reference
-    "day": (0.07, 0.18),  # the two daylight AI shots: pushed down to a dim, desaturated late-day look
-    "real": (0.12, 0.26),  # bodycam / interview / draft real footage (inside cards, over a dark backdrop)
+    "day": (0.07, 0.18),  # the daylight house shot: pushed down to a dim, desaturated late-day look
+    "real": (0.12, 0.26),  # draft-sourced real footage on portrait cards
+    "night": (0.16, 0.26),  # night bodycam cards: lifted enough to read faces, blacks still crushed
+    "interview": (0.17, 0.26),  # interview-room cards  # bodycam / interview / draft real footage (inside cards, over a dark backdrop)
     "photo": (0.2, 0.3),  # family photos / booking photo (shown on a polaroid print)
     "place": (0.10, 0.26),  # CC location photos, full frame
     "doc": (0.26, 0.18),  # court filing paper on the dark desk
-    "bgblur": (0.04, 0.22),  # blurred backdrops behind cards
+    "bgblur": (0.05, 0.22),  # blurred backdrops behind cards
 }
 
 
@@ -121,7 +123,7 @@ CLIPS = {
     # ... and the four with no original, from the clean draft picture (1080x1920)
     "ai_house_back.mp4": (DRAFT, 141.9, 144.5, "null", "day", 0.93),
     "ai_laptop.mp4": (DRAFT, 11.0, 12.0, "null", "ai", 0.69),
-    "ai_calendar.mp4": (DRAFT, 64.8, 67.7, "null", "day", 1.0),
+    "ai_calendar.mp4": (DRAFT, 64.8, 67.7, "null", "ai", 1.0),
     "ai_writing.mp4": (DRAFT, 126.9, 130.6, "null", "ai", 1.0),
     # real footage from the draft (already 9:16) -> portrait cards
     "real_charles_day.mp4": (DRAFT, 135.0, 136.0, PORTRAIT, "real", 0.45),
@@ -129,19 +131,19 @@ CLIPS = {
     # Charles in his cap in the garage: real Chandler PD footage (screen-recorded; the crop drops the cursor)
     "real_charles_cap.mp4": (DRAFT, 113.0, 116.3, "crop=950:1689:0:115,scale=1080:1920:flags=lanczos", "real", 1.0),
     # Chandler PD bodycam, Jan 31 2019 -> 16:9 cards at native resolution
-    "real_night_a.mp4": (B03, 39.5, 44.15, CARD, "real", 1.0),
-    "real_night_b.mp4": (B03, 89.0, 91.2, CARD, "real", 1.0),
-    "real_night_c.mp4": (B03, 631.5, 635.1, CARD, "real", 1.0),
-    "real_to_door.mp4": (B03, 621.3, 624.4, CARD, "real", 1.0),
-    "real_night_face.mp4": (B03, 638.0, 641.05, CARD, "real", 1.0),
-    "real_bodycam_walk.mp4": (B03, 7.8, 12.2, CARD, "real", 1.0),
-    "real_gate.mp4": (B03, 788.5, 790.7, CARD, "real", 1.0),
-    "real_charles_close.mp4": (B03, 1019.8, 1022.5, CARD, "real", 1.0),
-    "real_walkaway.mp4": (B03, 583.0, 587.6, CARD, "real", 1.0),
+    "real_night_a.mp4": (B03, 39.5, 44.15, CARD, "night", 1.0),
+    "real_night_b.mp4": (B03, 89.0, 91.2, CARD, "night", 1.0),
+    "real_night_c.mp4": (B03, 631.5, 635.1, CARD, "night", 1.0),
+    "real_to_door.mp4": (B03, 621.3, 624.4, CARD, "night", 1.0),
+    "real_night_face.mp4": (B03, 638.0, 641.05, CARD, "night", 1.0),
+    "real_bodycam_walk.mp4": (B03, 7.8, 12.2, CARD, "night", 1.0),
+    "real_gate.mp4": (B03, 788.5, 790.7, CARD, "night", 1.0),
+    "real_charles_close.mp4": (B03, 1019.8, 1022.5, CARD, "night", 1.0),
+    "real_walkaway.mp4": (B03, 583.0, 587.6, CARD, "night", 1.0),
     # Chandler PD interview with Lori, Jul 11 2019 -> 16:9 cards
-    "real_int_1.mp4": (B05, 1194.5, 1198.3, WIDE, "real", 1.0),
-    "real_int_2.mp4": (B05, 799.5, 803.4, WIDE, "real", 1.0),
-    "real_int_3.mp4": (B05, 1995.0, 1998.0, WIDE, "real", 1.0),
+    "real_int_1.mp4": (B05, 1194.5, 1198.3, WIDE, "interview", 1.0),
+    "real_int_2.mp4": (B05, 799.5, 803.4, WIDE, "interview", 1.0),
+    "real_int_3.mp4": (B05, 1995.0, 1998.0, WIDE, "interview", 1.0),
 }
 BG = "scale=-2:1920,crop=1080:1920"
 

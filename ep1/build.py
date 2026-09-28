@@ -75,7 +75,7 @@ SHOTS = [
     dict(id="s21", kind="pcard", t=80.90, d=3.30, src="real_charles_cap.mp4", kb=(1.0, 1.08, 0, 0), origin="40% 20%",
          tag=("BODYCAM", "CHANDLER POLICE · 2019")),
     dict(id="s22", kind="card", t=84.20, d=3.10, src="real_to_door.mp4", kb=(1.0, 1.12, 0, 0), origin="57% 30%", tag=BODYCAM_JAN),
-    dict(id="s23", kind="card", t=87.30, d=3.05, src="real_night_face.mp4", kb=(1.05, 1.45, 0, 0), origin="53% 40%", tag=BODYCAM_JAN),
+    dict(id="s23", kind="card", t=87.30, d=3.05, src="real_night_face.mp4", kb=(1.05, 1.45, 0, 0), origin="72% 40%", tag=BODYCAM_JAN),
     dict(id="s24", kind="doc", t=90.35, d=4.55, src="doc_p04.jpg", tag=FILING,
          cam=[(0.0, 770, 900, 1.0), (4.55, 770, 905, 1.08)],
          hl=[(2.0, 1201, 829, 76, 40), (2.15, 264, 889, 134, 40), (2.75, 851, 940, 424, 40), (2.95, 266, 999, 98, 40)]),
@@ -100,7 +100,7 @@ SHOTS = [
          loc=("MARICOPA COUNTY SUPERIOR COURT", "PHOENIX, ARIZONA")),
     dict(id="s36", kind="polaroid", t=140.90, d=2.20, src="photo_charles.jpg", label="CHARLES VALLOW", tag=("FAMILY PHOTO", "VALLOW FAMILY")),
     dict(id="s37", kind="card", t=143.10, d=2.70, src="real_charles_close.mp4", kb=(1.0, 1.12, 0, 0), origin="18% 35%", tag=BODYCAM_JAN),
-    dict(id="s38", kind="card", t=145.80, d=4.60, src="real_walkaway.mp4", kb=(1.06, 1.0, 0, 0), origin="25% 40%", veil=0.6),
+    dict(id="s38", kind="card", t=145.80, d=4.60, src="real_walkaway.mp4", kb=(1.06, 1.0, 0, 0), origin="25% 40%", veil=0.6, tag=BODYCAM_JAN),
 ]
 
 CUT_TO_BLACK = 150.40
