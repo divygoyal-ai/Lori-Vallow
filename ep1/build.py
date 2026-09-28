@@ -33,6 +33,7 @@ DUR = 155.0
 #   doc            the court filing, with a camera path and highlights
 # ai = "REENACTMENT" (AI stand-in for a real moment) or "ILLUSTRATION" (symbolic AI image)
 FACE = "50% 22%"  # push-ins on Charles travel toward his head, not his hands
+STAMP_FREE = "50% 90%"  # vertical bodycam crops: zoomed from below so the burnt-in timestamp is cropped out
 BODYCAM_JAN = ("BODYCAM", "CHANDLER POLICE · JAN 31, 2019")
 INTERVIEW = ("POLICE INTERVIEW", "CHANDLER POLICE · JUL 11, 2019")
 FILING = ("COURT FILING", "MARICOPA COUNTY · FEB 2019")
@@ -53,7 +54,7 @@ SHOTS = [
          tag=("FAMILY PHOTO", "CHARLES VALLOW")),
     dict(id="s10", kind="image", t=28.50, d=3.45, src="gilbert.jpg", kb=(1.12, 1.2, 4, -4)),
     # --- the turn: Charles is terrified (real bodycam, Jan 31 2019)
-    dict(id="s11", kind="video", t=31.95, d=4.65, src="real_night_a.mp4", kb=(1.0, 1.1, 0, 0), origin=FACE, tag=BODYCAM_JAN),
+    dict(id="s11", kind="video", origin=STAMP_FREE, t=31.95, d=4.65, src="real_night_a.mp4", kb=(1.14, 1.24, 0, 0), tag=BODYCAM_JAN),
     dict(id="s12", kind="video", t=36.60, d=4.30, src="real_lori_car.mp4", kb=(1.0, 1.1, 0, 0), origin="55% 25%",
          tag=("BODYCAM", "ARIZONA POLICE · 2019")),
     dict(id="s13", kind="card", t=40.90, d=3.80, src="real_int_1.mp4", kb=(1.0, 1.25, 0, 0), origin="27% 55%", tag=INTERVIEW),
@@ -71,13 +72,13 @@ SHOTS = [
     dict(id="s18b", kind="doc", t=70.30, d=3.10, src="doc_p04.jpg", tag=FILING,
          cam=[(0.0, 600, 1070, 1.3), (3.1, 610, 1070, 1.38)],
          hl=[(0.75, 312, 1052, 572, 42)]),
-    dict(id="s19", kind="video", t=73.40, d=3.90, src="real_int_2.mp4", kb=(1.0, 1.1, 0, 0), origin="50% 50%", tag=INTERVIEW),
+    dict(id="s19", kind="video", t=73.40, d=3.90, src="real_int_2.mp4", kb=(1.1, 1.18, 0, 0), origin="50% 10%", tag=INTERVIEW),
     # --- "he is not Charles anymore"
-    dict(id="s20", kind="video", t=77.30, d=3.60, src="real_night_c.mp4", kb=(1.0, 1.1, 0, 0), origin="55% 30%", tag=BODYCAM_JAN),
+    dict(id="s20", kind="video", origin=STAMP_FREE, t=77.30, d=3.60, src="real_night_c.mp4", kb=(1.14, 1.24, 0, 0), tag=BODYCAM_JAN),
     dict(id="s21", kind="video", t=80.90, d=3.30, src="real_charles_cap.mp4", kb=(1.0, 1.08, 0, 0), origin="40% 20%",
          tag=("BODYCAM", "CHANDLER POLICE · 2019")),
-    dict(id="s22", kind="video", t=84.20, d=3.10, src="real_to_door.mp4", kb=(1.0, 1.08, 0, 0), origin=FACE, tag=BODYCAM_JAN),
-    dict(id="s23", kind="video", t=87.30, d=3.05, src="real_night_face.mp4", kb=(1.0, 1.3, 0, 0), origin="50% 38%", tag=BODYCAM_JAN),
+    dict(id="s22", kind="video", origin=STAMP_FREE, t=84.20, d=3.10, src="real_to_door.mp4", kb=(1.14, 1.22, 0, 0), tag=BODYCAM_JAN),
+    dict(id="s23", kind="video", origin=STAMP_FREE, t=87.30, d=3.05, src="real_night_face.mp4", kb=(1.14, 1.42, 0, 0), tag=BODYCAM_JAN),
     dict(id="s24", kind="doc", t=90.35, d=4.55, src="doc_p04.jpg", tag=FILING,
          cam=[(0.0, 770, 900, 1.0), (4.55, 770, 905, 1.08)],
          hl=[(2.0, 1201, 829, 76, 40), (2.15, 264, 889, 134, 40), (2.75, 851, 940, 424, 40), (2.95, 266, 999, 98, 40)]),
@@ -86,7 +87,7 @@ SHOTS = [
     dict(id="s26", kind="card", t=104.60, d=3.00, src="real_int_3.mp4", kb=(1.2, 1.4, 0, 0), origin="27% 55%", tag=INTERVIEW),
     # --- Charles acts
     dict(id="s27", kind="video", t=107.60, d=4.70, src="ai_watching.mp4", kb=(1.0, 1.05, 0, 0), ai="REENACTMENT"),
-    dict(id="s28", kind="video", t=112.30, d=4.40, src="real_bodycam_walk.mp4", kb=(1.0, 1.06, 0, 0), tag=BODYCAM_JAN),
+    dict(id="s28", kind="video", origin=STAMP_FREE, t=112.30, d=4.40, src="real_bodycam_walk.mp4", kb=(1.14, 1.20, 0, 0), tag=BODYCAM_JAN),
     dict(id="s29", kind="video", t=116.70, d=2.80, src="ai_family_court.mp4", kb=(1.0, 1.06, 0, 0), ai="REENACTMENT"),
     dict(id="s30", kind="doc", t=119.50, d=3.10, src="doc_p01.jpg", tag=("COURT FILING", "MARICOPA COUNTY SUPERIOR COURT"),
          cam=[(0.0, 560, 820, 1.2), (3.1, 580, 830, 1.3)],
@@ -96,14 +97,14 @@ SHOTS = [
     dict(id="s32", kind="doc", t=126.30, d=5.70, src="doc_p04.jpg", tag=FILING,
          cam=[(0.0, 780, 990, 1.05), (5.7, 775, 995, 1.09)],
          hl=[(0.3, 800, 993, 478, 40), (2.2, 756, 940, 520, 40), (2.45, 266, 999, 98, 40)]),
-    dict(id="s33", kind="video", t=132.00, d=2.20, src="real_gate.mp4", kb=(1.0, 1.05, 0, 0), tag=BODYCAM_JAN),
-    dict(id="s34", kind="video", t=134.20, d=2.20, src="real_night_b.mp4", kb=(1.0, 1.08, 0, 0), origin=FACE, tag=BODYCAM_JAN),
+    dict(id="s33", kind="video", origin=STAMP_FREE, t=132.00, d=2.20, src="real_gate.mp4", kb=(1.14, 1.19, 0, 0), tag=BODYCAM_JAN),
+    dict(id="s34", kind="video", origin=STAMP_FREE, t=134.20, d=2.20, src="real_night_b.mp4", kb=(1.14, 1.22, 0, 0), tag=BODYCAM_JAN),
     dict(id="s35", kind="image", t=136.40, d=4.50, src="maricopa_court.jpg", kb=(1.1, 1.2, -5, 5),
          loc=("MARICOPA COUNTY SUPERIOR COURT", "PHOENIX, ARIZONA")),
     dict(id="s36", kind="image", t=140.90, d=2.20, src="photo_charles.jpg", kb=(1.0, 1.1, 0, 0), origin="50% 30%",
          tag=("FAMILY PHOTO", "CHARLES VALLOW")),
-    dict(id="s37", kind="video", t=143.10, d=2.70, src="real_charles_close.mp4", kb=(1.0, 1.1, 0, 0), origin="50% 35%", tag=BODYCAM_JAN),
-    dict(id="s38", kind="video", t=145.80, d=4.60, src="real_walkaway.mp4", kb=(1.05, 1.0, 0, 0), veil=0.6, tag=BODYCAM_JAN),
+    dict(id="s37", kind="video", origin=STAMP_FREE, t=143.10, d=2.70, src="real_charles_close.mp4", kb=(1.14, 1.24, 0, 0), tag=BODYCAM_JAN),
+    dict(id="s38", kind="video", origin=STAMP_FREE, t=145.80, d=4.60, src="real_walkaway.mp4", kb=(1.19, 1.14, 0, 0), veil=0.6, tag=BODYCAM_JAN),
 ]
 
 CUT_TO_BLACK = 150.40
