@@ -38,9 +38,19 @@
    ~0.25), no added grain. Average brightness ~0.085 for AI shots, ~0.10–0.13 for real footage and
    photos (they sit on cards over a darker backdrop). One look for everything; only exposure and
    saturation are solved per clip (`prep/prep_assets.py`).
-   Real 16:9 footage is never cropped and blown up to 9:16: it goes on an evidence card at native
-   resolution over a blurred copy of itself. Symbolic AI images are tagged ILLUSTRATION, AI stand-ins for
-   real moments REENACTMENT, real footage by its source.
+   v4 feedback: that was too dark ("blacked out"). The look stays warm and low-key but is lifted
+   (AI ~0.14, real footage ~0.19-0.21, photos ~0.24 mean luma) with a gentler toe so detail always reads.
+   Documents keep the v2 warm paper look.
+   **Vertical first:** real 16:9 footage is cut as a face-centred 9:16 crop and upscaled with Magnific
+   Precision (faithful, no invented detail), then zoomed slightly from below so the burnt-in bodycam
+   timestamp is out of frame. At most 5-10% of the runtime may stay landscape (cards). Full-screen shots
+   only; no small portrait cards.
+   Symbolic AI images are tagged ILLUSTRATION, AI stand-ins for real moments REENACTMENT, real footage by
+   its source.
+10. **AI shots: 20-30% of the runtime, never a face.** Made on Magnific: reference image with Nano Banana 2
+    (9:16, Charles's back as the image reference), then animated with Kling 3.0 (9:16, 1080p). Every
+    person is strictly from behind or out of frame; screens show no AI text. Real footage and records
+    carry the other 70-80%.
 8. **Suspense/mystery music bed that never competes with the VO.** Keep it about 18–22 dB below the
    voice while speech plays, let it rise slightly in pauses, and duck it under key lines.
 9. **Built in HyperFrames.** The whole edit is authored as HyperFrames HTML code: timeline, cuts, grade,
