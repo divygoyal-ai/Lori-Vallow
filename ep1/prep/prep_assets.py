@@ -50,7 +50,8 @@ TARGET = {
     "night": (0.19, 0.28),  # night bodycam, full-frame vertical
     "interview": (0.21, 0.28),  # interview room
     "photo": (0.24, 0.32),  # family photos / booking photo
-    "portrait": (0.2, 0.4),  # opening portrait of Charles: keeps natural skin colour
+    "portrait": (0.2, 0.4),
+    "mugshot": (0.34, 0.3),  # booking photo on a white height chart: the bright chart would otherwise crush the face  # opening portrait of Charles: keeps natural skin colour
     "place": (0.16, 0.28),  # CC location photos, full frame
     "doc": (0.38, None),  # court filing paper on the dark desk (v2 look)
     "bgblur": (0.07, 0.24),  # blurred backdrops behind the two landscape cards / polaroid
@@ -136,7 +137,6 @@ CLIPS = {
     # AI shots: the producer's original generations (720x1280), all faceless / from behind ...
     "ai_garden_kids.mp4": (AIV("m3_tCrF.mp4"), 0.3, 3.72, UP, "ai", 1.0),
     "ai_boy_floor.mp4": (AIV("m6_Lw3h.mp4"), 0.0, 3.62, UP, "ai", 0.77),  # ends before he turns his head
-    "ai_writer_desk.mp4": (AIV("m4_5jy8.mp4"), 0.0, 7.7, UP, "ai", 1.0),
     # ... and new Magnific generations (Nano Banana 2 reference -> Kling 3.0), no faces anywhere
     "ai_party.mp4": (GEN("v_party_clean.mp4"), 0.0, 4.0, UP, "ai", 0.94),  # Kling 2.5, first second dropped (a guest faced camera), one background head softened
     "ai_family_hug.mp4": (GEN("v_porch.mp4"), 0.2, 2.0, UP, "ai", 0.72),  # Kling 2.5, slow motion: all four on the porch, from behind
@@ -152,6 +152,7 @@ CLIPS = {
 CARDS = {"real_int_1.mp4", "real_int_3.mp4", "real_court.mp4"}  # landscape cards get a blurred backdrop
 # real footage, full-screen vertical: (crop name, seconds used, grade, rate)
 REAL_V = {
+    "real_charles_day.mp4": ("charles_day", 1.0, "real", 0.45),  # draft: Chandler PD bodycam, Charles in daylight
     "real_lori_car.mp4": ("lori_car", 4.3, "real", 1.0),
     "real_charles_cap.mp4": ("charles_cap", 3.3, "real", 1.0),  # Charles in his cap in the garage (cursor cropped out)
     "real_night_a.mp4": ("night_a", 4.65, "night", 1.0),  # Chandler PD bodycam, Jan 31 2019
@@ -189,13 +190,19 @@ def images():
         ff("-i", src, "-vf", graded(["-i", src], "scale=-2:2200:flags=lanczos", "place"), "-q:v", "1", img(n))
     # AI stills (pre-scaled to 1080x1920 in gen/): family watching TV (screen softened), the world
     # ending (Nano Banana 2, understated), and the "I will..." note from the draft
-    for n, out in [("family_tv_still.png", "ai_family_tv.jpg"), ("world_end_1080.png", "ai_world.jpg"), ("i_will.png", "ai_i_will.jpg")]:
+    for n, out in [("family_tv_still.png", "ai_family_tv.jpg"), ("world_end_1080.png", "ai_world.jpg"), ("i_will.png", "ai_i_will.jpg"),
+                   ("writer_desk_1080.png", "ai_writer_desk.jpg")]:  # the writer's desk, nobody in frame
         still(["-i", GEN(n)], out, "null", "ai")
     # booking photo -> polaroid print (+ blurred backdrop); family photos -> full-screen stills
     src = ["-i", os.path.join(im, "mug_lori_kauai.jpg")]
     crop = "crop=440:557:172:4,scale=648:820:flags=lanczos"
     still(src, "lori_booking.jpg", crop, "photo")
     still(src, "lori_booking_bg.jpg", f"{crop},scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920", "bgblur")
+    # Chad Daybell, booking photo (Fremont County, 2020) -> polaroid print + blurred backdrop
+    src = ["-i", os.path.join(im, "mug_chad_2020.jpg")]
+    crop = "crop=948:1200:440:0,scale=648:820:flags=lanczos"
+    still(src, "chad_booking.jpg", crop, "mugshot")
+    still(src, "chad_booking_bg.jpg", f"{crop},scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920", "bgblur")
     photos = {
         "photo_wedding.jpg": (["-ss", "138.3", "-i", DRAFT], "null"),
         # Charles holding a baby, shown whole on a tall polaroid print; the baby's face is blurred (gen/baby_photo_safe.png)

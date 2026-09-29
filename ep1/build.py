@@ -79,12 +79,15 @@ SHOTS = [
     dict(id="s21", kind="video", t=80.90, d=3.30, src="real_charles_cap.mp4", kb=(1.0, 1.08, 0, 0), origin="40% 20%",
          tag=("BODYCAM", "CHANDLER POLICE · 2019")),
     dict(id="s22", kind="video", origin=STAMP_FREE, t=84.20, d=3.10, src="real_to_door.mp4", kb=(1.14, 1.22, 0, 0), tag=BODYCAM_JAN),
-    dict(id="s23", kind="video", origin=STAMP_FREE, t=87.30, d=3.05, src="real_night_face.mp4", kb=(1.14, 1.42, 0, 0), tag=BODYCAM_JAN),
+    dict(id="s23", kind="image", t=87.30, d=3.05, src="photo_charles.jpg", kb=(1.0, 1.18, 0, 0), origin="50% 32%",
+         tag=("FAMILY PHOTO", "CHARLES VALLOW")),
     dict(id="s24", kind="doc", t=90.35, d=4.55, src="doc_p04.jpg", tag=FILING,
          cam=[(0.0, 770, 900, 1.0), (4.55, 770, 905, 1.08)],
          hl=[(2.0, 1201, 829, 76, 40), (2.15, 264, 889, 134, 40), (2.75, 851, 940, 424, 40), (2.95, 266, 999, 98, 40)]),
     # --- the writer from out of state (Chad - never seen)
-    dict(id="s25", kind="video", t=94.90, d=7.70, src="ai_writer_desk.mp4", kb=(1.0, 1.12, 0, 0), ai="REENACTMENT"),
+    dict(id="s25", kind="polaroid", t=94.90, d=4.10, src="chad_booking.jpg", label="CHAD DAYBELL",
+         tag=("BOOKING PHOTO", "FREMONT COUNTY, IDAHO · 2020")),
+    dict(id="s25b", kind="image", t=99.00, d=3.60, src="ai_writer_desk.jpg", kb=(1.0, 1.1, 0, 0), origin="55% 60%", ai="REENACTMENT"),
     dict(id="s26", kind="card", t=102.60, d=5.00, src="real_int_3.mp4", kb=(1.2, 1.4, 0, 0), origin="27% 55%", tag=INTERVIEW),
     # --- Charles acts
     dict(id="s27", kind="video", t=107.60, d=4.70, src="ai_watching.mp4", kb=(1.0, 1.05, 0, 0), ai="REENACTMENT"),
@@ -102,8 +105,8 @@ SHOTS = [
     dict(id="s34", kind="video", origin=STAMP_FREE, t=134.20, d=2.20, src="real_night_b.mp4", kb=(1.14, 1.22, 0, 0), tag=BODYCAM_JAN),
     dict(id="s35", kind="card", t=136.40, d=4.50, src="real_court.mp4", kb=(1.0, 1.08, 0, 0), origin="45% 45%",
          loc=("MARICOPA COUNTY SUPERIOR COURT", "PHOENIX, ARIZONA")),
-    dict(id="s36", kind="image", t=140.90, d=2.20, src="photo_charles.jpg", kb=(1.0, 1.1, 0, 0), origin="50% 30%",
-         tag=("FAMILY PHOTO", "CHARLES VALLOW")),
+    dict(id="s36", kind="video", t=140.90, d=2.20, src="real_charles_day.mp4", kb=(1.0, 1.12, 0, 0), origin="42% 16%",
+         tag=("BODYCAM", "CHANDLER POLICE · 2019")),
     dict(id="s37", kind="video", origin=STAMP_FREE, t=143.10, d=2.70, src="real_charles_close.mp4", kb=(1.14, 1.24, 0, 0), tag=BODYCAM_JAN),
     dict(id="s38", kind="video", origin=STAMP_FREE, t=145.80, d=4.60, src="real_walkaway.mp4", kb=(1.19, 1.14, 0, 0), veil=0.6, tag=BODYCAM_JAN),
 ]
