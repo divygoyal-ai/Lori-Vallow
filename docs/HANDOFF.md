@@ -132,3 +132,22 @@ bodycam walk-away -> black, end card "EPISODE 2".
 
 Magnific plan had ~81,000 credits left after Episode 1. Drive uploads were done through a Composio
 Google Drive connector (`GOOGLEDRIVE_UPLOAD_FROM_URL`, then `GOOGLEDRIVE_MOVE_FILE` into the Episode folder).
+
+## Clip Check on Episode 1 (v7), 2026-10-01
+
+Run with the Osira episode review skill. Files in `reviews/ep1_clip_check/`: the PDF report, the xlsx
+clearance log (formulas recalculated, zero errors), and the scripts (`data.py`, `build_report.py`).
+`OSIRA_CONTEXT_HANDOFF.md` and the source registry were not available, so every source was researched fresh.
+
+Status: **BLOCKED** (self-check, not a sign-off; verdicts are internal working rules, not legal advice).
+Third-party material is 109.6 s of 155 s (71%). Verdicts: 1 USE, 23 USE IF, 0 LICENSE, 12 DON'T, 4 NOT CLEARED.
+
+Open items, in order:
+1. A: the on-screen and spoken "exact words" quote is not in the court filing. Re-record or soften.
+2. B: bodycam is a Law&Crime copy with the logo cropped out, tagged Chandler PD but released by Gilbert PD.
+3. C: four photos of Charles (homicide victim) with no consent or traced owner.
+4. D: AI labels must read KI-GENERIERT / AI-GENERATED and be larger. E: add CC credits (aerial, court sign).
+5. F to H: trace unidentified sources, blur the minor's name on filing page 1, drop the circled 24th on the calendar.
+
+New rule for later episodes: log source and capture method for every file when it arrives, never crop out a
+logo, and tag the agency that actually released footage. Seven questions for counsel are in the report.

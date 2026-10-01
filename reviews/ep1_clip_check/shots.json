@@ -1,0 +1,353 @@
+[
+ {
+  "id": "s01",
+  "t": 0.0,
+  "d": 4.55,
+  "kind": "image",
+  "src": "charles_portrait.jpg",
+  "tag": "",
+  "ai": ""
+ },
+ {
+  "id": "s02",
+  "t": 4.55,
+  "d": 3.6,
+  "kind": "image",
+  "src": "chandler_aerial.jpg",
+  "tag": "",
+  "ai": ""
+ },
+ {
+  "id": "s03",
+  "t": 8.15,
+  "d": 4.25,
+  "kind": "video",
+  "src": "ai_party.mp4",
+  "tag": "",
+  "ai": "REENACTMENT"
+ },
+ {
+  "id": "s05",
+  "t": 12.4,
+  "d": 2.5,
+  "kind": "video",
+  "src": "ai_family_hug.mp4",
+  "tag": "",
+  "ai": "REENACTMENT"
+ },
+ {
+  "id": "s06",
+  "t": 14.9,
+  "d": 2.08,
+  "kind": "image",
+  "src": "photo_wedding.jpg",
+  "tag": "FAMILY PHOTO / CHARLES & LORI VALLOW",
+  "ai": ""
+ },
+ {
+  "id": "s07",
+  "t": 16.98,
+  "d": 3.42,
+  "kind": "video",
+  "src": "ai_garden_kids.mp4",
+  "tag": "",
+  "ai": "REENACTMENT"
+ },
+ {
+  "id": "s08",
+  "t": 20.4,
+  "d": 4.7,
+  "kind": "video",
+  "src": "ai_boy_floor.mp4",
+  "tag": "",
+  "ai": "REENACTMENT"
+ },
+ {
+  "id": "s09",
+  "t": 25.1,
+  "d": 3.4,
+  "kind": "polaroid",
+  "src": "photo_charles_baby.jpg",
+  "tag": "FAMILY PHOTO / VALLOW FAMILY",
+  "ai": ""
+ },
+ {
+  "id": "s10",
+  "t": 28.5,
+  "d": 3.45,
+  "kind": "image",
+  "src": "ai_family_tv.jpg",
+  "tag": "",
+  "ai": "REENACTMENT"
+ },
+ {
+  "id": "s11",
+  "t": 31.95,
+  "d": 4.65,
+  "kind": "video",
+  "src": "real_night_a.mp4",
+  "tag": "BODYCAM / CHANDLER POLICE \u00b7 JAN 31, 2019",
+  "ai": ""
+ },
+ {
+  "id": "s12",
+  "t": 36.6,
+  "d": 4.3,
+  "kind": "video",
+  "src": "real_lori_car.mp4",
+  "tag": "BODYCAM / ARIZONA POLICE \u00b7 2019",
+  "ai": ""
+ },
+ {
+  "id": "s13",
+  "t": 40.9,
+  "d": 3.8,
+  "kind": "card",
+  "src": "real_int_1.mp4",
+  "tag": "POLICE INTERVIEW / CHANDLER POLICE \u00b7 JUL 11, 2019",
+  "ai": ""
+ },
+ {
+  "id": "s14",
+  "t": 44.7,
+  "d": 4.2,
+  "kind": "polaroid",
+  "src": "lori_booking.jpg",
+  "tag": "BOOKING PHOTO / KAUAI POLICE \u00b7 2020",
+  "ai": ""
+ },
+ {
+  "id": "s15",
+  "t": 48.9,
+  "d": 11.2,
+  "kind": "doc",
+  "src": "doc_p04.jpg",
+  "tag": "COURT FILING / MARICOPA COUNTY \u00b7 FEB 2019",
+  "ai": ""
+ },
+ {
+  "id": "s16",
+  "t": 60.1,
+  "d": 4.8,
+  "kind": "image",
+  "src": "ai_world.jpg",
+  "tag": "",
+  "ai": "ILLUSTRATION"
+ },
+ {
+  "id": "s17",
+  "t": 64.9,
+  "d": 2.9,
+  "kind": "video",
+  "src": "ai_calendar.mp4",
+  "tag": "",
+  "ai": "ILLUSTRATION"
+ },
+ {
+  "id": "s18a",
+  "t": 67.8,
+  "d": 2.5,
+  "kind": "doc",
+  "src": "doc_p03.jpg",
+  "tag": "COURT FILING / MARICOPA COUNTY \u00b7 FEB 2019",
+  "ai": ""
+ },
+ {
+  "id": "s18b",
+  "t": 70.3,
+  "d": 3.1,
+  "kind": "doc",
+  "src": "doc_p04.jpg",
+  "tag": "COURT FILING / MARICOPA COUNTY \u00b7 FEB 2019",
+  "ai": ""
+ },
+ {
+  "id": "s19",
+  "t": 73.4,
+  "d": 3.9,
+  "kind": "video",
+  "src": "real_int_2.mp4",
+  "tag": "POLICE INTERVIEW / CHANDLER POLICE \u00b7 JUL 11, 2019",
+  "ai": ""
+ },
+ {
+  "id": "s20",
+  "t": 77.3,
+  "d": 3.6,
+  "kind": "video",
+  "src": "real_night_c.mp4",
+  "tag": "BODYCAM / CHANDLER POLICE \u00b7 JAN 31, 2019",
+  "ai": ""
+ },
+ {
+  "id": "s21",
+  "t": 80.9,
+  "d": 3.3,
+  "kind": "video",
+  "src": "real_charles_cap.mp4",
+  "tag": "BODYCAM / CHANDLER POLICE \u00b7 2019",
+  "ai": ""
+ },
+ {
+  "id": "s22",
+  "t": 84.2,
+  "d": 3.1,
+  "kind": "video",
+  "src": "real_to_door.mp4",
+  "tag": "BODYCAM / CHANDLER POLICE \u00b7 JAN 31, 2019",
+  "ai": ""
+ },
+ {
+  "id": "s23",
+  "t": 87.3,
+  "d": 3.05,
+  "kind": "image",
+  "src": "photo_charles.jpg",
+  "tag": "FAMILY PHOTO / CHARLES VALLOW",
+  "ai": ""
+ },
+ {
+  "id": "s24",
+  "t": 90.35,
+  "d": 4.55,
+  "kind": "doc",
+  "src": "doc_p04.jpg",
+  "tag": "COURT FILING / MARICOPA COUNTY \u00b7 FEB 2019",
+  "ai": ""
+ },
+ {
+  "id": "s25",
+  "t": 94.9,
+  "d": 4.1,
+  "kind": "polaroid",
+  "src": "chad_booking.jpg",
+  "tag": "BOOKING PHOTO / FREMONT COUNTY, IDAHO \u00b7 2020",
+  "ai": ""
+ },
+ {
+  "id": "s25b",
+  "t": 99.0,
+  "d": 3.6,
+  "kind": "image",
+  "src": "ai_writer_desk.jpg",
+  "tag": "",
+  "ai": "REENACTMENT"
+ },
+ {
+  "id": "s26",
+  "t": 102.6,
+  "d": 5.0,
+  "kind": "card",
+  "src": "real_int_3.mp4",
+  "tag": "POLICE INTERVIEW / CHANDLER POLICE \u00b7 JUL 11, 2019",
+  "ai": ""
+ },
+ {
+  "id": "s27",
+  "t": 107.6,
+  "d": 4.7,
+  "kind": "video",
+  "src": "ai_watching.mp4",
+  "tag": "",
+  "ai": "REENACTMENT"
+ },
+ {
+  "id": "s28",
+  "t": 112.3,
+  "d": 4.4,
+  "kind": "video",
+  "src": "real_bodycam_walk.mp4",
+  "tag": "BODYCAM / CHANDLER POLICE \u00b7 JAN 31, 2019",
+  "ai": ""
+ },
+ {
+  "id": "s29",
+  "t": 116.7,
+  "d": 2.8,
+  "kind": "video",
+  "src": "ai_family_court.mp4",
+  "tag": "",
+  "ai": "REENACTMENT"
+ },
+ {
+  "id": "s30",
+  "t": 119.5,
+  "d": 3.1,
+  "kind": "doc",
+  "src": "doc_p01.jpg",
+  "tag": "COURT FILING / MARICOPA COUNTY SUPERIOR COURT",
+  "ai": ""
+ },
+ {
+  "id": "s31",
+  "t": 122.6,
+  "d": 3.7,
+  "kind": "image",
+  "src": "ai_i_will.jpg",
+  "tag": "",
+  "ai": "REENACTMENT"
+ },
+ {
+  "id": "s32",
+  "t": 126.3,
+  "d": 5.7,
+  "kind": "doc",
+  "src": "doc_p04.jpg",
+  "tag": "COURT FILING / MARICOPA COUNTY \u00b7 FEB 2019",
+  "ai": ""
+ },
+ {
+  "id": "s33",
+  "t": 132.0,
+  "d": 2.2,
+  "kind": "video",
+  "src": "real_gate.mp4",
+  "tag": "BODYCAM / CHANDLER POLICE \u00b7 JAN 31, 2019",
+  "ai": ""
+ },
+ {
+  "id": "s34",
+  "t": 134.2,
+  "d": 2.2,
+  "kind": "video",
+  "src": "real_night_b.mp4",
+  "tag": "BODYCAM / CHANDLER POLICE \u00b7 JAN 31, 2019",
+  "ai": ""
+ },
+ {
+  "id": "s35",
+  "t": 136.4,
+  "d": 4.5,
+  "kind": "card",
+  "src": "real_court.mp4",
+  "tag": "",
+  "ai": ""
+ },
+ {
+  "id": "s36",
+  "t": 140.9,
+  "d": 2.2,
+  "kind": "video",
+  "src": "real_charles_day.mp4",
+  "tag": "BODYCAM / CHANDLER POLICE \u00b7 2019",
+  "ai": ""
+ },
+ {
+  "id": "s37",
+  "t": 143.1,
+  "d": 2.7,
+  "kind": "video",
+  "src": "real_charles_close.mp4",
+  "tag": "BODYCAM / CHANDLER POLICE \u00b7 JAN 31, 2019",
+  "ai": ""
+ },
+ {
+  "id": "s38",
+  "t": 145.8,
+  "d": 4.6,
+  "kind": "video",
+  "src": "real_walkaway.mp4",
+  "tag": "BODYCAM / CHANDLER POLICE \u00b7 JAN 31, 2019",
+  "ai": ""
+ }
+]
